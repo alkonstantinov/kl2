@@ -7,13 +7,17 @@ import BaseComponent from './components/basecomponent';
 class App extends Component {
   render() {
     return (
-      <Switch>
 
-        <Route exact path='/' component={BaseComponent} />
-                        
-         <Route path="*" component={BaseComponent} /> 
+      <div class="container">
+        <Switch>
 
-      </Switch> 
+          <Route exact path='/' component={BaseComponent} />
+
+
+        </Switch>
+      </div>
+
+
     );
   }
 }
