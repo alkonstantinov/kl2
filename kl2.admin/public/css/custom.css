@@ -43,4 +43,11 @@ body {
     border-top-right-radius: 0;
   }
 
- 
+ .navbar{
+   background-color: #d0daea;
+ }
+
+
+ .btn-default{
+  border:1px solid #000 ;
+}

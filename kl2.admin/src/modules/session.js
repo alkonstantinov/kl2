@@ -1,11 +1,19 @@
 class SessionManager {
 
     GetSession() {
-        return localStorage.getItem("token");
+        var user = localStorage.getItem("user");
+        if (user)
+            return JSON.parse(user);
+        else
+            return null;
     }
 
-    SetSession(token) {
-        localStorage.setItem("token", token);
+    SetSession(user) {
+        localStorage.setItem("user", JSON.stringify(user));
+    }
+
+    Logout() {
+        localStorage.removeItem("user");
     }
 
     CheckSession() {
@@ -14,15 +22,15 @@ class SessionManager {
 
     GetLanguage() {
         var language = localStorage.getItem("lang");
-        if(!language){
-           language="en";
-           localStorage.setItem("lang", language);
-        }       
-        
+        if (!language) {
+            language = "en";
+            localStorage.setItem("lang", language);
+        }
+
         return language;
     }
 
-    SetLanguage(language){
+    SetLanguage(language) {
         localStorage.setItem("lang", language);
     }
 

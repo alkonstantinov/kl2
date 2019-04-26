@@ -4,6 +4,9 @@ import Loader from 'react-loader-spinner';
 import Axios from 'axios';
 import { toast } from 'react-toastify';
 import { Redirect } from 'react-router-dom';
+import eventClient from '../modules/eventclient';
+
+
 
 class Login extends BaseComponent {
     constructor(props) {
@@ -18,14 +21,19 @@ class Login extends BaseComponent {
 
 
 
-
     Login() {
 
         this.ShowSpin();
         var self = this;
 
         Axios.get('https://www.dir.bg')
-            .then(result => { self.SM.SetSession("123")})
+            .then(result => {
+                self.SM.SetSession({
+                    username: "Александър Константинов",
+                    token: 123
+                });
+                eventClient.emit("loginchange");
+            })
             .catch(error => {
                 toast.error(error.message);
 
@@ -39,7 +47,7 @@ class Login extends BaseComponent {
 
 
     render() {
-        var self = this;
+        var self = this;        
         return (
             <p>
                 {
@@ -52,7 +60,7 @@ class Login extends BaseComponent {
                             width="100"
                         /> :
                         self.SM.GetSession() !== null ?
-                            <Redirect to={"https://www.dir.bg"} push></Redirect>
+                            <Redirect to={"/mainmenu"} push></Redirect>
                             :
                             <div className="form-signin">
                                 <h2 className="form-signin-heading">{self.T("pleasesignin")}</h2>
