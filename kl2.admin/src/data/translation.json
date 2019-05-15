@@ -4,6 +4,12 @@
         "username": "User Name",
         "password": "Password",
         "signin": "Sign in",
-        "mainmenu": "Main menu"
+        "mainmenu": "Main menu",
+        "versions": "Versions",
+        "newversion": "New version",
+        "selectstartdate": "Select Start Date",
+        "startdate": "Start Date",
+        "cancel": "Cancel",
+        "datealreadyexists": "Version with this date already exists"
     }
 }

@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import BaseComponent from './basecomponent';
 import eventClient from '../modules/eventclient';
 import { Link } from 'react-router-dom';
+import Language from './language';
 
 class Header extends BaseComponent {
     constructor(props) {
@@ -11,7 +12,6 @@ class Header extends BaseComponent {
         this.SetBreadcrump = this.SetBreadcrump.bind(this);
 
         this.state = {
-            user: this.SM.GetSession(),
             breadcrumbs: [],
             logout: false
 
@@ -32,7 +32,7 @@ class Header extends BaseComponent {
         eventClient.removeEventListener('breadcrump', this.SetBreadcrump);
     }
 
-
+    
 
     Logout() {
         this.SM.Logout();
@@ -41,35 +41,45 @@ class Header extends BaseComponent {
 
     render() {
         var self = this;
+        var user = self.SM.GetSession();
         return (
             <header className="navbar">
-                <div className="col-9">
+                <div className="col-7">
                     {
-                        self.state.breadcrumbs.map((obj, i) =>
-                            <span>
-                                {
-                                    obj.href ?
-                                        <Link to={'/' + obj.href}>
-                                            {obj.title}
-                                        </Link>
-                                        :
-                                        obj.title
-                                }
-                                &nbsp;
+                         user === null ? null :
+                            self.state.breadcrumbs.map((obj, i) =>
+                                <span>
+                                    {
+                                        obj.href ?
+                                            <Link to={'/' + obj.href}>
+                                                {obj.title}
+                                            </Link>
+                                            :
+                                            obj.title
+                                    }
+                                    &nbsp;
 
 
 
                                 {i === self.state.breadcrumbs.length ? null : <i className="fas fa-chevron-right fa-xs"></i>}
 
-                            </span>
+                                </span>
 
-                        )}
+                            )}
                 </div>
                 <div className="col-2">
-                    {self.state.user.username}
+                    <Language></Language>
+                </div>
+                <div className="col-2">
+                    {
+                        user === null ? null : user.username
+                    }
                 </div>
                 <div className="col-1">
-                    <i class="fas fa-power-off" onClick={self.Logout}></i>
+                    {
+                        user===null ? null : <i class="fas fa-power-off" onClick={self.Logout}></i>
+                    }
+
                 </div>
             </header>
         )

@@ -8,14 +8,12 @@ import eventClient from '../modules/eventclient';
 
 
 
+
 class Login extends BaseComponent {
     constructor(props) {
         super(props);
         this.Login = this.Login.bind(this);
-        this.state = {
-            spinner: false,
-            Rec: {}
-        };
+        
     }
 
 
@@ -25,7 +23,7 @@ class Login extends BaseComponent {
 
         this.ShowSpin();
         var self = this;
-
+        
         Axios.get('https://www.dir.bg')
             .then(result => {
                 self.SM.SetSession({
@@ -51,7 +49,7 @@ class Login extends BaseComponent {
         return (
             <p>
                 {
-                    this.state.spinner === true ?
+                    this.self.spinner === true ?
                         <Loader
                             type="ThreeDots"
                             color="#00BFFF"

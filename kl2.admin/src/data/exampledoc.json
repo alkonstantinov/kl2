@@ -1,0 +1,20 @@
+{
+  "versions": [
+    {
+      "id": "2",
+      "dateStart": "20190201",
+      "dateEnd": "20190301"
+    },{
+      "id": "1",
+      "dateStart": "20190101",
+      "dateEnd": "20190201"
+
+    },
+    
+    {
+      "id": "3",
+      "dateStart": "20190301",
+      "dateEnd": null
+    }
+  ]
+}

@@ -8,6 +8,8 @@ import BaseComponent from './components/basecomponent';
 import Header from './components/header';
 import eventClient from './modules/eventclient';
 import MainMenu from './components/mainmenu';
+import Doc from './components/doc';
+
 
 class App extends BaseComponent {
 
@@ -27,10 +29,12 @@ class App extends BaseComponent {
 
   componentWillMount() {
     eventClient.on('loginchange', this.LoginEvent);
+    eventClient.on('language', this.Refresh);
   }
 
   componentWillUnmount() {
     eventClient.removeEventListener('loginchange', this.LoginEvent);
+    eventClient.removeEventListener('language', this.Refresh);
   }
   render() {
     var self = this;
@@ -38,9 +42,9 @@ class App extends BaseComponent {
     return (
 
       <div className="container">
-        {self.SM.GetSession() === null ? null : <Header></Header>}
+        <Header></Header>
         <ToastContainer position={toast.POSITION.TOP_LEFT} autoClose={5000} />
-        
+
         <main>
           {
             self.SM.GetSession() === null ?
@@ -48,6 +52,9 @@ class App extends BaseComponent {
               :
               <Switch>
                 <Route exact path='/mainmenu' component={MainMenu} />
+                <Route exact path='/doc' component={Doc} />
+                <Route exact path='/doc/:docId' component={Doc} />
+
                 <Route component={MainMenu} />
 
 

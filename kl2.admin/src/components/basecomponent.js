@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SessionManager from '../modules/session';
 import Trans from '../data/translation.json';
+import eventClient from '../modules/eventclient';
 
 class BaseComponent extends Component {
 
@@ -10,11 +11,22 @@ class BaseComponent extends Component {
         super(props);
         this.HandleChange = this.HandleChange.bind(this);
         this.HandleSubmit = this.HandleSubmit.bind(this);
+        this.Refresh = this.Refresh.bind(this);
+
+        this.state = {
+            Error: null,
+            spinner: false,
+            Rec: {}
+        };
 
     }
 
+    Refresh() {
+        window.location.reload();
+    }
+
     T(key) {
-        return Trans[this.SM.GetLanguage()][key];
+        return Trans[this.SM.GetLanguage()] ? Trans[this.SM.GetLanguage()][key] : "";
     }
 
     HandleChange = event => {
@@ -37,6 +49,7 @@ class BaseComponent extends Component {
         this.setState({ spinner: false });
     }
 
+    
 
 
     render() {
