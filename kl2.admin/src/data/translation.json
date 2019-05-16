@@ -9,7 +9,11 @@
         "newversion": "New version",
         "selectstartdate": "Select Start Date",
         "startdate": "Start Date",
+        "enddate": "End Date",
         "cancel": "Cancel",
-        "datealreadyexists": "Version with this date already exists"
+        "datealreadyexists": "Version with this date already exists",
+        "stop": "Stop",
+        "title": "Title",
+        "documenttype": "Document type"
     }
 }

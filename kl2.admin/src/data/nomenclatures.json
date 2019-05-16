@@ -1,0 +1,38 @@
+{
+    "issuers":[
+        {
+            "id":"1",
+            "en":"Parliament",
+            "sq":"Da Parlament"
+        },
+        {
+            "id":"2",
+            "en":"Court",
+            "sq":"Da KORT"
+        }
+    ],
+    "doctypes":[
+        {
+            "id":"1",
+            "en":"Constitution",
+            "sq":"Da KONSTITUTION"
+        },
+        {
+            "id":"2",
+            "en":"Law",
+            "sq":"Da LOU"
+        }
+    ],
+    "parties":[
+        {
+            "id":"1",
+            "en":"Party 1",
+            "sq":"SQ Party 1"
+        },
+        {
+            "id":"2",
+            "en":"Party 2",
+            "sq":"SQ Party 2"
+        }
+    ]
+}

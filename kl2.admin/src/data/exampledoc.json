@@ -3,18 +3,29 @@
     {
       "id": "2",
       "dateStart": "20190201",
-      "dateEnd": "20190301"
-    },{
+      "dateEnd": "20190301",
+      "title": {
+        "en": "English",
+        "sq": "Sqipp"
+      }
+    },
+    {
       "id": "1",
       "dateStart": "20190101",
-      "dateEnd": "20190201"
-
+      "dateEnd": "20190201",
+      "title": {
+        "en": "English2",
+        "sq": "Sqipp2"
+      }
     },
-    
     {
       "id": "3",
       "dateStart": "20190301",
-      "dateEnd": null
+      "dateEnd": null,
+      "title": {
+        "en": "English3",
+        "sq": "Sqipp3"
+      }
     }
   ]
 }
