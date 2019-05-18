@@ -14,6 +14,9 @@
         "datealreadyexists": "Version with this date already exists",
         "stop": "Stop",
         "title": "Title",
-        "documenttype": "Document type"
+        "documenttype": "Document type",
+        "documentnumber": "Document number",
+        "issuer": "Issuer",
+        "requisites": "Requisites"
     }
 }

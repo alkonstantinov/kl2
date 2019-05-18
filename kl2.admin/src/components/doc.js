@@ -15,6 +15,7 @@ import { Calendar } from 'primereact/calendar';
 import uuidv4 from 'uuid/v4';
 import { toast } from 'react-toastify';
 import MLEdit from '../visuals/mledit';
+import {Tree} from 'primereact/tree';
 
 class Doc extends BaseComponent {
     DocId = null;
@@ -35,7 +36,8 @@ class Doc extends BaseComponent {
         this.ChangeTitle = this.ChangeTitle.bind(this);
         this.GetCurrentVersion = this.GetCurrentVersion.bind(this);
         this.SetValueByVersion = this.SetValueByVersion.bind(this);
-        
+        this.SetValueCommon = this.SetValueCommon.bind(this);
+
 
 
         if (this.props.match.params.docId)
@@ -53,7 +55,8 @@ class Doc extends BaseComponent {
         });
         this.setState({
             Document: doc,
-            CurrentVersionId: doc.versions[0].id
+            CurrentVersionId: doc.versions[0].id,
+            DisplayMode: "requisites"//requisites, content
         });
     }
 
@@ -181,11 +184,19 @@ class Doc extends BaseComponent {
         return this.state.Document.versions.find(x => x.id === this.state.CurrentVersionId);
     }
 
-    SetValueByVersion(property,value){
+    SetValueByVersion(property, value) {
         var document = this.state.Document;
         document.versions.find(x => x.id == this.state.CurrentVersionId)[property] = value;
         this.setState({ Document: document });
     }
+
+    SetValueCommon(property, value) {
+        var document = this.state.Document;
+        document[property] = value;
+        this.setState({ Document: document });
+    }
+
+
 
     render() {
         var self = this;
@@ -212,53 +223,86 @@ class Doc extends BaseComponent {
                                     <button className="btn btn-danger" onClick={self.ShowSelectDateDialog}>{self.T("newversion")}</button>
                                 </div>
                             </div>
+                            <div className="row border">
+                                <div className="col-12">
+                                    <button className="btn btn-light" onClick={() => self.setState({ DisplayMode: "requisites" })}>{self.T("requisites")}</button>
+                                </div>
+                            </div>
 
 
                         </div>
-                        <div className="col-9  border">
-                            <div className="row border">
-                                <div className="col-2">
-                                    <label className="control-label">{self.T("startdate")}</label>
-                                </div>
-                                <div className="col-4">
-                                    {moment(self.GetCurrentVersion().dateStart, 'YYYYMMDD').format('DD.MM.YYYY')}
-                                </div>
-                                <div className="col-2">
-                                    <label className="control-label">{self.T("enddate")}</label>
-                                </div>
-                                <div className="col-4">
-                                    {
-                                        self.GetCurrentVersion().dateEnd ?
-                                            moment(self.GetCurrentVersion().dateEnd, 'YYYYMMDD').format('DD.MM.YYYY')
-                                            : <button className="btn btn-danger" onClick={self.ShowSelectDateDialog}>{self.T("stop")}</button>
-                                    }
-                                </div>
-                            </div>
-                            <div className="row border">
-                                <div className="col-2">
-                                    <label className="control-label">{self.T("title")}</label>
-                                </div>
-                                <div className="col-10">
-                                    <MLEdit prefix="title" parent={self.GetCurrentVersion().title} change={self.ChangeTitle}></MLEdit>
-                                </div>
-                            </div>
-                            <div className="row border">
-                                <div className="col-3">
-                                    <label className="control-label">
-                                        {self.T("documenttype")}
-                                    </label>
-                                </div>
-                                <div className="col-9">
-                                    <select className="form-control" onChange={(e) => self.ChangeVersion(e)} value={self.state.CurrentVersionId} id="SelectedVersion">
+                        {self.state.DisplayMode === "requisites" ?
+                            <div className="col-9  border">
+                                <div className="row border">
+                                    <div className="col-2">
+                                        <label className="control-label">{self.T("startdate")}</label>
+                                    </div>
+                                    <div className="col-4">
+                                        {moment(self.GetCurrentVersion().dateStart, 'YYYYMMDD').format('DD.MM.YYYY')}
+                                    </div>
+                                    <div className="col-2">
+                                        <label className="control-label">{self.T("enddate")}</label>
+                                    </div>
+                                    <div className="col-4">
                                         {
-                                            self.state.Nomenclatures.doctypes.map((obj, i) => <option key="" value={obj.id}>{obj[self.SM.GetLanguage()]}</option>)
+                                            self.GetCurrentVersion().dateEnd ?
+                                                moment(self.GetCurrentVersion().dateEnd, 'YYYYMMDD').format('DD.MM.YYYY')
+                                                : <button className="btn btn-danger" onClick={self.ShowSelectDateDialog}>{self.T("stop")}</button>
                                         }
-                                    </select>
+                                    </div>
+                                </div>
+                                <div className="row border">
+                                    <div className="col-2">
+                                        <label className="control-label">{self.T("title")}</label>
+                                    </div>
+                                    <div className="col-10">
+                                        <MLEdit prefix="title" parent={self.GetCurrentVersion().title} change={self.ChangeTitle}></MLEdit>
+                                    </div>
+                                </div>
+                                <div className="row border">
+                                    <div className="col-3">
+                                        <label className="control-label">
+                                            {self.T("documenttype")}
+                                        </label>
+                                    </div>
+                                    <div className="col-9">
+                                        <select className="form-control" onChange={(e) => self.SetValueCommon("documenttype", e.target.value)} value={self.state.Document.documenttype}>
+                                            {
+                                                self.state.Nomenclatures.doctypes.map((obj, i) => <option key="" value={obj.id}>{obj[self.SM.GetLanguage()]}</option>)
+                                            }
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div className="row border">
+                                    <div className="col-3">
+                                        <label className="control-label">
+                                            {self.T("issuer")}
+                                        </label>
+                                    </div>
+                                    <div className="col-9">
+                                        <select className="form-control" onChange={(e) => self.SetValueCommon("issuer", e.target.value)} value={self.state.Document.issuer}>
+                                            {
+                                                self.state.Nomenclatures.issuers.map((obj, i) => <option key="" value={obj.id}>{obj[self.SM.GetLanguage()]}</option>)
+                                            }
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div className="row border">
+                                    <div className="col-3">
+                                        <label className="control-label">
+                                            {self.T("documentnumber")}
+                                        </label>
+                                    </div>
+                                    <div className="col-9">
+                                        <input type="text" className="form-control" onChange={(e) => self.SetValueCommon("documentnumber", e.target.value)} value={self.state.Document.documentnumber}></input>
+                                    </div>
                                 </div>
 
                             </div>
-
-                        </div>
+                            : null
+                        }
                     </div>
 
 

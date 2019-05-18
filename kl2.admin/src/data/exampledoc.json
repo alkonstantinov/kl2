@@ -1,4 +1,7 @@
 {
+  "documenttype": "2",
+  "documentnumber": "aaaaaaa123",
+  "issuer": "2",
   "versions": [
     {
       "id": "2",

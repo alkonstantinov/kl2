@@ -22,17 +22,5 @@
             "en":"Law",
             "sq":"Da LOU"
         }
-    ],
-    "parties":[
-        {
-            "id":"1",
-            "en":"Party 1",
-            "sq":"SQ Party 1"
-        },
-        {
-            "id":"2",
-            "en":"Party 2",
-            "sq":"SQ Party 2"
-        }
     ]
 }
