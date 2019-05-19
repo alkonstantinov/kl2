@@ -15,7 +15,11 @@ import { Calendar } from 'primereact/calendar';
 import uuidv4 from 'uuid/v4';
 import { toast } from 'react-toastify';
 import MLEdit from '../visuals/mledit';
-import {Tree} from 'primereact/tree';
+import { Tree } from 'primereact/tree';
+import 'primereact/resources/themes/nova-light/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+
 
 class Doc extends BaseComponent {
     DocId = null;
@@ -46,6 +50,7 @@ class Doc extends BaseComponent {
         this.state.NomenclaturesLoaded = false;
         this.state.Document = null;
         this.state.SelectDateDialogVisible = false;
+
     }
 
 
@@ -56,7 +61,8 @@ class Doc extends BaseComponent {
         this.setState({
             Document: doc,
             CurrentVersionId: doc.versions[0].id,
-            DisplayMode: "requisites"//requisites, content
+            DisplayMode: "requisites", //requisites, content,
+            TreeData: [this.CreateTree(doc, doc.structure)]
         });
     }
 
@@ -197,6 +203,16 @@ class Doc extends BaseComponent {
     }
 
 
+    CreateTree(document, structureNode) {
+        var element = Object.create(null);
+        element.key = structureNode.id;
+        element.label = document.paragraphs[structureNode.id].title[this.SM.GetLanguage()];
+        element.children = [];
+        structureNode.children.forEach(x =>
+            element.children.push(this.CreateTree(document, x))
+        );
+        return element;
+    }
 
     render() {
         var self = this;
@@ -205,7 +221,7 @@ class Doc extends BaseComponent {
 
 
             this.state.Document && this.state.NomenclaturesLoaded ?
-                <div className="container mt-3">
+                <div className="container-fluid mt-3">
                     <div className="row">
                         <div className="col-3">
                             <div className="row border">
@@ -226,6 +242,11 @@ class Doc extends BaseComponent {
                             <div className="row border">
                                 <div className="col-12">
                                     <button className="btn btn-light" onClick={() => self.setState({ DisplayMode: "requisites" })}>{self.T("requisites")}</button>
+                                </div>
+                            </div>
+                            <div className="row border">
+                                <div className="col-12">
+                                    <Tree value={this.state.TreeData} style={{ marginTop: '.5em' }} />
                                 </div>
                             </div>
 

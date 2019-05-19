@@ -30,5 +30,54 @@
         "sq": "Sqipp3"
       }
     }
-  ]
+  ],
+  "paragraphs": {
+    "1": {
+      "title": {
+        "en": "English title",
+        "sq": "Sqipp"
+      },
+      "type": "title",
+      "text": {
+        "en": "English text",
+        "sq": "Sqipp text"
+      }
+    },
+    "2": {
+      "title": {
+        "en": "English",
+        "sq": "Sqipp"
+      },
+      "type": "subtitle",
+      "text": {
+        "en": "English text",
+        "sq": "Sqipp text"
+      }
+    },
+    "3": {
+      "title": {
+        "en": "English",
+        "sq": "Sqipp"
+      },
+      "type": "article",
+      "text": {
+        "en": "article",
+        "sq": "article"
+      }
+    }
+  },
+  "structure": {
+    "id": "1",
+    "children": [
+      {
+        "id": "2",
+        "children": [
+          {
+            "id": "3",
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
 }

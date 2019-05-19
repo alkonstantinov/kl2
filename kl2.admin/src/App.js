@@ -41,7 +41,7 @@ class App extends BaseComponent {
 
     return (
 
-      <div className="container">
+      <div className="container-fluid">
         <Header></Header>
         <ToastContainer position={toast.POSITION.TOP_LEFT} autoClose={5000} />
 
