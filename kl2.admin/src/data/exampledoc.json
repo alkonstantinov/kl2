@@ -2,59 +2,41 @@
   "documenttype": "2",
   "documentnumber": "aaaaaaa123",
   "issuer": "2",
-  "versions": [
-    {
-      "id": "2",
-      "dateStart": "20190201",
-      "dateEnd": "20190301",
-      "title": {
-        "en": "English",
-        "sq": "Sqipp"
-      }
-    },
-    {
-      "id": "1",
-      "dateStart": "20190101",
-      "dateEnd": "20190201",
-      "title": {
-        "en": "English2",
-        "sq": "Sqipp2"
-      }
-    },
-    {
-      "id": "3",
-      "dateStart": "20190301",
-      "dateEnd": null,
-      "title": {
-        "en": "English3",
-        "sq": "Sqipp3"
-      }
-    }
-  ],
+  "dateStart": "20190301",
+  "dateEnd": null,
+  "title": {
+    "en": "English3",
+    "sq": "Sqipp3"
+  },
   "paragraphs": {
-    "1": {
+    "q1": {
       "title": {
-        "en": "English title",
-        "sq": "Sqipp"
+        "en": "part",
+        "sq": "Ruut"
       },
-      "type": "title",
+      "type": "part",
       "text": {
         "en": "English text",
         "sq": "Sqipp text"
-      }
+      },
+      "children": []
     },
-    "2": {
+    "q2": {
       "title": {
         "en": "English",
         "sq": "Sqipp"
       },
-      "type": "subtitle",
+      "type": "part",
       "text": {
         "en": "English text",
         "sq": "Sqipp text"
-      }
+      },
+      "children": [
+        "q3",
+        "q4"
+      ]
     },
-    "3": {
+    "q3": {
       "title": {
         "en": "English",
         "sq": "Sqipp"
@@ -63,21 +45,24 @@
       "text": {
         "en": "article",
         "sq": "article"
-      }
+      },
+      "children": []
+    },
+    "q4": {
+      "title": {
+        "en": "English next",
+        "sq": "Sqipp"
+      },
+      "type": "article",
+      "text": {
+        "en": "article",
+        "sq": "article"
+      },
+      "children": []
     }
   },
-  "structure": {
-    "id": "1",
-    "children": [
-      {
-        "id": "2",
-        "children": [
-          {
-            "id": "3",
-            "children": []
-          }
-        ]
-      }
-    ]
-  }
+  "rootParagraphs": [
+    "q1",
+    "q2"
+  ]
 }

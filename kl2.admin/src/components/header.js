@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import React from 'react';
 import BaseComponent from './basecomponent';
 import eventClient from '../modules/eventclient';
 import { Link } from 'react-router-dom';
@@ -48,10 +47,10 @@ class Header extends BaseComponent {
                     {
                          user === null ? null :
                             self.state.breadcrumbs.map((obj, i) =>
-                                <span>
+                                <span key={i}>
                                     {
                                         obj.href ?
-                                            <Link to={'/' + obj.href}>
+                                            <Link to={'/' + obj.href} key={i}>
                                                 {obj.title}
                                             </Link>
                                             :
@@ -77,7 +76,7 @@ class Header extends BaseComponent {
                 </div>
                 <div className="col-1">
                     {
-                        user===null ? null : <i class="fas fa-power-off" onClick={self.Logout}></i>
+                        user===null ? null : <i className="fas fa-power-off" onClick={self.Logout}></i>
                     }
 
                 </div>

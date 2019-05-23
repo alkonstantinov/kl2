@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import './App.css';
 import Login from './components/login';
@@ -8,7 +8,7 @@ import BaseComponent from './components/basecomponent';
 import Header from './components/header';
 import eventClient from './modules/eventclient';
 import MainMenu from './components/mainmenu';
-import Doc from './components/doc';
+import Document from './components/document';
 
 
 class App extends BaseComponent {
@@ -52,8 +52,8 @@ class App extends BaseComponent {
               :
               <Switch>
                 <Route exact path='/mainmenu' component={MainMenu} />
-                <Route exact path='/doc' component={Doc} />
-                <Route exact path='/doc/:docId' component={Doc} />
+                <Route exact path='/doc' component={Document} />
+                <Route exact path='/doc/:docId' component={Document} />
 
                 <Route component={MainMenu} />
 

@@ -1,8 +1,8 @@
 {
     "en": {
-        "pleasesignin": "Please, sign in",
-        "username": "User Name",
         "password": "Password",
+        "pleasesignin": "Please, sign in",
+        "username": "User Name",        
         "signin": "Sign in",
         "mainmenu": "Main menu",
         "versions": "Versions",
@@ -17,6 +17,12 @@
         "documenttype": "Document type",
         "documentnumber": "Document number",
         "issuer": "Issuer",
-        "requisites": "Requisites"
+        "requisites": "Requisites",
+        "part": "Part",
+        "article": "Article",
+        "alinea": "Alinea",
+        "text": "Text",
+        "add": "Add",
+        "document": "Document"
     }
 }

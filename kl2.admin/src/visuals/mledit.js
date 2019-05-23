@@ -3,15 +3,15 @@ import languages from '../data/languages';
 import { InputText } from 'primereact/inputtext';
 
 class MLEdit extends Component {
-    constructor(props) {
-        super(props);
+    // constructor(props) {
+    //     super(props);
 
 
 
 
-    }
+    // }
 
-    
+
 
     render() {
         var self = this;
@@ -19,8 +19,8 @@ class MLEdit extends Component {
         return (
             <div>
                 {
-                    languages.map(obj =>
-                        <div className="row">
+                    languages.map((obj, i) =>
+                        <div className="row" key={i}>
                             <div className="col-3">
                                 {obj.title}
                             </div>

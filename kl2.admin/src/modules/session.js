@@ -1,13 +1,6 @@
 class SessionManager {
 
-    GetLanguage() {
-        var l = localStorage.getItem("language");
-        return l || "en";
-    }
-
-    SetLanguage(language) {
-        localStorage.setItem("language", language);
-    }
+    
 
 
     GetSession() {

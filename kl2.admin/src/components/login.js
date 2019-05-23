@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import BaseComponent from './basecomponent';
 import Loader from 'react-loader-spinner';
 import Axios from 'axios';
@@ -13,7 +13,7 @@ class Login extends BaseComponent {
     constructor(props) {
         super(props);
         this.Login = this.Login.bind(this);
-        
+
     }
 
 
@@ -23,7 +23,7 @@ class Login extends BaseComponent {
 
         this.ShowSpin();
         var self = this;
-        
+
         Axios.get('https://www.dir.bg')
             .then(result => {
                 self.SM.SetSession({
@@ -43,13 +43,12 @@ class Login extends BaseComponent {
 
 
 
-
     render() {
-        var self = this;        
+        var self = this;
         return (
             <p>
                 {
-                    this.self.spinner === true ?
+                    this.state.spinner === true ?
                         <Loader
                             type="ThreeDots"
                             color="#00BFFF"

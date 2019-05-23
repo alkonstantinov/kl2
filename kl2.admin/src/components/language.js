@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import eventClient from '../modules/eventclient';
-import { Link } from 'react-router-dom';
 import BaseComponent from './basecomponent';
 import { SelectButton } from 'primereact/selectbutton';
 import 'primereact/resources/themes/nova-light/theme.css';

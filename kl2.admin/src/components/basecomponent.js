@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import SessionManager from '../modules/session';
 import Trans from '../data/translation.json';
-import eventClient from '../modules/eventclient';
 
 class BaseComponent extends Component {
 
@@ -28,6 +27,11 @@ class BaseComponent extends Component {
     T(key) {
         return Trans[this.SM.GetLanguage()] ? Trans[this.SM.GetLanguage()][key] : "";
     }
+
+    TranslateIntoLanguage(key, lang) {
+        return Trans[lang] ? Trans[lang][key] : "";
+    }
+
 
     HandleChange = event => {
         this.setState({
