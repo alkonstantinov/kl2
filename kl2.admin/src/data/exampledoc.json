@@ -1,4 +1,5 @@
 {
+  "id": "123123",
   "documenttype": "2",
   "documentnumber": "aaaaaaa123",
   "issuer": "2",
@@ -16,8 +17,8 @@
       },
       "type": "part",
       "text": {
-        "en": "English text",
-        "sq": "Sqipp text"
+        "en": "English q1",
+        "sq": "Sqipp q1"
       },
       "children": []
     },
@@ -28,8 +29,8 @@
       },
       "type": "part",
       "text": {
-        "en": "English text",
-        "sq": "Sqipp text"
+        "en": "English q2",
+        "sq": "Sqipp q2"
       },
       "children": [
         "q3",
@@ -43,8 +44,8 @@
       },
       "type": "article",
       "text": {
-        "en": "article",
-        "sq": "article"
+        "en": "english q3",
+        "sq": "sqipp q3"
       },
       "children": []
     },
@@ -55,8 +56,8 @@
       },
       "type": "article",
       "text": {
-        "en": "article",
-        "sq": "article"
+        "en": "english q4",
+        "sq": "sqipp q4"
       },
       "children": []
     }

@@ -2,8 +2,6 @@ import React from 'react';
 import BaseComponent from './basecomponent';
 import eventClient from '../modules/eventclient';
 import { Link } from 'react-router-dom';
-import { Editor } from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Axios from 'axios';
 
 
@@ -16,9 +14,7 @@ class MainMenu extends BaseComponent {
                 title: this.T("mainmenu")
             }]
         )
-        this.state = {
-
-        };
+        
 
         this.uploadCallback = this.uploadCallback.bind(this);
 
@@ -54,7 +50,6 @@ class MainMenu extends BaseComponent {
 
 
     render() {
-        var self = this;
         return (
 
             <div className="container mt-3">
@@ -63,22 +58,7 @@ class MainMenu extends BaseComponent {
                     <p>ьььььььь</p>
                 </Link>
                 <br />
-                <Editor
-                    wrapperClassName="wrapper-class"
-                    editorClassName="editor-class"
-                    toolbarClassName="toolbar-class"
-
-                    toolbar={{
-                        options: ['image'],
-
-                        image: {
-                            urlEnabled: false,
-                            uploadEnabled: true,
-                            uploadCallback: self.uploadCallback
-
-                        }
-                    }}
-                />
+                
             </div>
 
         )

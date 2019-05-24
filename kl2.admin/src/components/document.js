@@ -17,6 +17,7 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import { PanelMenu } from 'primereact/panelmenu';
 import Languages from '../data/languages';
+import PartEdit from '../visuals/partedit';
 
 class Document extends BaseComponent {
     DocId = null;
@@ -37,6 +38,9 @@ class Document extends BaseComponent {
         this.DeletePart = this.DeletePart.bind(this);
         this.ConstructAddMenu = this.ConstructAddMenu.bind(this);
         this.AddPart = this.AddPart.bind(this);
+        this.SetSelectedNodeProperty = this.SetSelectedNodeProperty.bind(this);
+        this.GetSelectedNodeProperty = this.GetSelectedNodeProperty.bind(this);
+
 
 
         if (this.props.match.params.docId)
@@ -46,6 +50,7 @@ class Document extends BaseComponent {
         this.state.Document = null;
         this.state.SelectDateDialogVisible = false;
 
+        
 
     }
 
@@ -175,8 +180,9 @@ class Document extends BaseComponent {
     ChangeSelectedNode(nodeId) {
         this.setState({
             SelectedNodeId: nodeId,
-            AddMenu: this.ConstructAddMenu(nodeId)
-        });
+            AddMenu: this.ConstructAddMenu(nodeId),
+            DisplayMode: nodeId !== "-1" ? "structure" : "requisites"
+        });        
     }
 
     MovePart(up) {
@@ -319,6 +325,19 @@ class Document extends BaseComponent {
     }
 
 
+    GetSelectedNodeProperty(lang, prop) {
+        var doc = this.state.Document;
+        return doc.paragraphs[this.state.SelectedNodeId][prop][lang];
+
+    }
+
+    SetSelectedNodeProperty(lang, prop, value) {
+        var doc = this.state.Document;
+        doc.paragraphs[this.state.SelectedNodeId][prop][lang] = value;
+        this.setState({ Document: doc });
+    }
+
+    
     render() {
         var self = this;
         return (
@@ -326,6 +345,7 @@ class Document extends BaseComponent {
 
 
             this.state.Document && this.state.NomenclaturesLoaded ?
+
                 <div className="container-fluid mt-3">
                     <div className="row">
                         <div className="col-3">
@@ -348,7 +368,7 @@ class Document extends BaseComponent {
                                         <div className="col-2 align-middle">
                                             {
                                                 self.Child2Parent[self.state.SelectedNodeId] &&
-                                                    !self.Child2Parent[self.state.SelectedNodeId].isFirst ? <button className="btn btn-light" onClick={() => self.MovePart(true)}><i class="fas fa-sort-up fa-lg"></i></button> : null
+                                                    !self.Child2Parent[self.state.SelectedNodeId].isFirst ? <button className="btn btn-light" onClick={() => self.MovePart(true)}><i className="fas fa-sort-up fa-lg"></i></button> : null
                                             }
 
 
@@ -356,13 +376,13 @@ class Document extends BaseComponent {
                                         <div className="col-2 align-middle">
                                             {
                                                 self.Child2Parent[self.state.SelectedNodeId] &&
-                                                    !self.Child2Parent[self.state.SelectedNodeId].isLast ? <button className="btn btn-light" onClick={() => self.MovePart(false)}><i class="fas fa-sort-down fa-lg"></i></button> : null
+                                                    !self.Child2Parent[self.state.SelectedNodeId].isLast ? <button className="btn btn-light" onClick={() => self.MovePart(false)}><i className="fas fa-sort-down fa-lg"></i></button> : null
                                             }
                                         </div>
                                         <div className="col-2">
                                             {
                                                 self.state.Document.paragraphs[self.state.SelectedNodeId] &&
-                                                    self.state.Document.paragraphs[self.state.SelectedNodeId].children.length === 0 ? <button className="btn btn-light" onClick={() => self.DeletePart()}><i class="fas fa-trash fa-lg"></i></button> : null}
+                                                    self.state.Document.paragraphs[self.state.SelectedNodeId].children.length === 0 ? <button className="btn btn-light" onClick={() => self.DeletePart()}><i className="fas fa-trash fa-lg"></i></button> : null}
                                         </div>
                                         <div className="col-6">
                                             <PanelMenu model={self.state.AddMenu} style={{ 'width': '100%' }} />
@@ -460,7 +480,11 @@ class Document extends BaseComponent {
                                 </div>
 
                             </div>
-                            : null
+                            :
+
+                            <div className="col-9  border">
+                                <PartEdit getProperty={self.GetSelectedNodeProperty} setProperty={self.SetSelectedNodeProperty} selectedNodeId={self.state.SelectedNodeId}></PartEdit>
+                            </div>
                         }
                     </div>
 

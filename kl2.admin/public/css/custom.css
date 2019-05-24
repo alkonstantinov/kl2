@@ -51,3 +51,8 @@ body {
  .btn-default{
   border:1px solid #000 ;
 }
+
+
+.DraftEditor-root{
+  background-color: #FFFFFF;
+}

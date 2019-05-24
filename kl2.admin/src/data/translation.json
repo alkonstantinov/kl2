@@ -23,6 +23,7 @@
         "alinea": "Alinea",
         "text": "Text",
         "add": "Add",
-        "document": "Document"
+        "document": "Document",
+        "content":"Content"
     }
 }
