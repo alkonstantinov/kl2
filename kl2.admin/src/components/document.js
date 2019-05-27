@@ -18,6 +18,7 @@ import 'primeicons/primeicons.css';
 import { PanelMenu } from 'primereact/panelmenu';
 import Languages from '../data/languages';
 import PartEdit from '../visuals/partedit';
+import DocSelect from '../visuals/docselect';
 
 class Document extends BaseComponent {
     DocId = null;
@@ -40,6 +41,9 @@ class Document extends BaseComponent {
         this.AddPart = this.AddPart.bind(this);
         this.SetSelectedNodeProperty = this.SetSelectedNodeProperty.bind(this);
         this.GetSelectedNodeProperty = this.GetSelectedNodeProperty.bind(this);
+        this.ShowSelectDateDialog = this.ShowSelectDateDialog.bind(this);
+        this.SelectDocumentPart = this.SelectDocumentPart.bind(this);
+        
 
 
 
@@ -49,7 +53,8 @@ class Document extends BaseComponent {
         this.state.NomenclaturesLoaded = false;
         this.state.Document = null;
         this.state.SelectDateDialogVisible = false;
-
+        this.state.SelectDocumentVisible = false;
+        
         
 
     }
@@ -126,7 +131,7 @@ class Document extends BaseComponent {
 
 
     ShowSelectDateDialog() {
-        this.setState({ SelectDateDialogVisible: true });
+        this.setState({ SelectDocumentVisible: true });
     }
 
 
@@ -337,6 +342,13 @@ class Document extends BaseComponent {
         this.setState({ Document: doc });
     }
 
+
+    SelectDocumentPart(id, partid){
+        console.log(id);
+        console.log(partid);
+        this.setState({ SelectDocumentVisible: false });
+    }
+
     
     render() {
         var self = this;
@@ -508,6 +520,10 @@ class Document extends BaseComponent {
                                 <button className="btn btn-default" onClick={() => self.setState({ SelectDateDialogVisible: false })}>{self.T("cancel")}</button>
                             </div>
                         </div>
+                    </Dialog>
+                    <Dialog header={self.T("selectdocument")} visible={this.state.SelectDocumentVisible} style={{ width: '50vw' }} 
+                    modal={true} onHide={() => self.setState({ SelectDocumentVisible: false })} >
+                        <DocSelect onlyDocument={false} selectSuccess={self.SelectDocumentPart}></DocSelect>
                     </Dialog>
                 </div >
 
