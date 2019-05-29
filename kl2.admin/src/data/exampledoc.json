@@ -4,7 +4,14 @@
   "documentnumber": "aaaaaaa123",
   "issuer": "2",
   "dateStart": "20190301",
+  "officialjournalnumber": "55",
+  "officialjournalyear": "2019",
   "dateEnd": null,
+  "annulled": true,
+  "annulledDocInfo": {
+    "id": "1",
+    "partid": "2"
+  },
   "title": {
     "en": "English3",
     "sq": "Sqipp3"
@@ -14,6 +21,11 @@
       "title": {
         "en": "part",
         "sq": "Ruut"
+      },
+      "annulled": false,
+      "annulledDocInfo": {
+        "id": "1",
+        "partid": "2"
       },
       "type": "part",
       "text": {
@@ -26,6 +38,11 @@
       "title": {
         "en": "English",
         "sq": "Sqipp"
+      },
+      "annulled": true,
+      "annulledDocInfo": {
+        "id": "1",
+        "partid": "2"
       },
       "type": "part",
       "text": {
@@ -42,6 +59,11 @@
         "en": "English",
         "sq": "Sqipp"
       },
+      "annulled": true,
+      "annulledDocInfo": {
+        "id": "1",
+        "partid": "2"
+      },
       "type": "article",
       "text": {
         "en": "english q3",
@@ -53,6 +75,11 @@
       "title": {
         "en": "English next",
         "sq": "Sqipp"
+      },
+      "annulled": true,
+      "annulledDocInfo": {
+        "id": "1",
+        "partid": "2"
       },
       "type": "article",
       "text": {

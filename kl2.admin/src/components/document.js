@@ -19,6 +19,7 @@ import { PanelMenu } from 'primereact/panelmenu';
 import Languages from '../data/languages';
 import PartEdit from '../visuals/partedit';
 import DocSelect from '../visuals/docselect';
+import docpartresponse from '../data/docpartresponse';
 
 class Document extends BaseComponent {
     DocId = null;
@@ -43,7 +44,9 @@ class Document extends BaseComponent {
         this.GetSelectedNodeProperty = this.GetSelectedNodeProperty.bind(this);
         this.ShowSelectDateDialog = this.ShowSelectDateDialog.bind(this);
         this.SelectDocumentPart = this.SelectDocumentPart.bind(this);
-        
+        this.GetCitedDocumentFromServer = this.GetCitedDocumentFromServer.bind(this);
+        this.AnnulleDocument = this.AnnulleDocument.bind(this);
+        this.AnnullePart = this.AnnullePart.bind(this);
 
 
 
@@ -55,7 +58,8 @@ class Document extends BaseComponent {
         this.state.SelectDateDialogVisible = false;
         this.state.SelectDocumentVisible = false;
         
-        
+
+
 
     }
 
@@ -92,6 +96,8 @@ class Document extends BaseComponent {
                         SelectedNodeId: "-1",
                         ExpandedNodes: expandedNodes
                     });
+
+                    this.GetCitedDocumentFromServer(doc.annulledDocInfo, 1);
 
                 }).catch(
                     function (response) {
@@ -187,7 +193,8 @@ class Document extends BaseComponent {
             SelectedNodeId: nodeId,
             AddMenu: this.ConstructAddMenu(nodeId),
             DisplayMode: nodeId !== "-1" ? "structure" : "requisites"
-        });        
+        });
+        this.GetCitedDocumentFromServer(this.state.Document.paragraphs[nodeId].annulledDocInfo, 2);
     }
 
     MovePart(up) {
@@ -332,24 +339,127 @@ class Document extends BaseComponent {
 
     GetSelectedNodeProperty(lang, prop) {
         var doc = this.state.Document;
-        return doc.paragraphs[this.state.SelectedNodeId][prop][lang];
-
+        if (lang)
+            return doc.paragraphs[this.state.SelectedNodeId][prop][lang];
+        else
+            return doc.paragraphs[this.state.SelectedNodeId][prop];
     }
 
     SetSelectedNodeProperty(lang, prop, value) {
         var doc = this.state.Document;
-        doc.paragraphs[this.state.SelectedNodeId][prop][lang] = value;
+        doc.paragraphs[this.state.SelectedNodeId][prop][lang] = value;        
         this.setState({ Document: doc });
     }
 
 
-    SelectDocumentPart(id, partid){
-        console.log(id);
-        console.log(partid);
-        this.setState({ SelectDocumentVisible: false });
+    SelectDocumentPart(id, partid) {
+        if (this.state.AnnulleMode === 1) {
+            var doc = this.state.Document;
+            doc.annulledDocInfo = {
+                id: id,
+                partid: partid
+            };
+
+            this.setState({
+                SelectDocumentVisible: false,
+                Document: doc
+            });
+            this.GetCitedDocumentFromServer(doc.annulledDocInfo, 1);
+
+        }
+        if (this.state.AnnulleMode === 2) {
+            var doc = this.state.Document;
+            doc.paragraphs[this.state.SelectedNodeId].annulledDocInfo = {
+                id: id,
+                partid: partid
+            };
+
+            this.setState({
+                SelectDocumentVisible: false,
+                Document: doc
+            });
+            this.GetCitedDocumentFromServer(doc.annulledDocInfo, 2);
+
+        }
+
+    }
+
+
+
+    GetCitedDocumentFromServer(citeInfo, mode/* 1 - whole document, 2 - part*/) {
+        if (!citeInfo) {
+            switch (mode) {
+                case 1: this.setState({ WDAnnuledInfo: null }); break;
+                case 2: this.setState({ CPAnnuledInfo: null }); break;
+                default: break;
+            }
+            return;
+        }
+
+        Axios.get('https://www.dir.bg').then(
+            result => {
+
+                switch (mode) {
+                    case 1: this.setState({ WDAnnuledInfo: docpartresponse }); break;
+                    case 2: this.setState({ CPAnnuledInfo: docpartresponse }); break;
+                    default: break;
+                }
+
+            }).catch(
+                function (response) {
+                    console.log(response);
+                }
+            );
+
+
     }
 
     
+
+    AnnulleDocument(annulle) {
+        var doc = this.state.Document;
+        doc.annulled = annulle;
+
+        if (annulle) {
+            this.setState({
+                Document: doc,
+                AnnulleMode: 1,//1 за целия документ, 2 за параграфа
+                SelectDocumentVisible: true
+            });
+
+        }
+        else {
+            doc.annulledDocInfo = null;
+            this.setState({
+                Document: doc
+            });
+            this.GetCitedDocumentFromServer(doc.annulledDocInfo, 1);
+        }
+    }
+
+
+    AnnullePart(annulle) {
+        var doc = this.state.Document;
+        doc.paragraphs[this.state.SelectedNodeId].annulled = annulle;
+
+        if (annulle) {
+            this.setState({
+                Document: doc,
+                AnnulleMode: 2,//1 за целия документ, 2 за параграфа
+                SelectDocumentVisible: true
+            });
+
+        }
+        else {
+            doc.paragraphs[this.state.SelectedNodeId].annulledDocInfo = null;
+            this.setState({
+                Document: doc
+            });
+            this.GetCitedDocumentFromServer(doc.paragraphs[this.state.SelectedNodeId].annulledDocInfo, 2);
+        }
+    }
+
+
     render() {
         var self = this;
         return (
@@ -438,10 +548,27 @@ class Document extends BaseComponent {
                                         {
                                             self.state.Document.dateEnd ?
                                                 moment(self.state.Document.dateEnd, 'YYYYMMDD').format('DD.MM.YYYY')
-                                                : <button className="btn btn-danger" onClick={self.ShowSelectDateDialog}>{self.T("stop")}</button>
+                                                : null
                                         }
                                     </div>
                                 </div>
+                                <div className="row border">
+                                    <div className="col-2">
+                                        <div class="checkbox">
+                                            <label><input type="checkbox" checked={self.state.Document.annulled} onChange={(e) => self.AnnulleDocument(e.target.checked)} />{self.T("annulled")}</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-10">
+                                        {
+                                            self.state.WDAnnuledInfo ?
+                                                <label>{self.state.WDAnnuledInfo.title[self.SM.GetLanguage()]} {self.state.WDAnnuledInfo.part[self.SM.GetLanguage()]}</label>
+                                                : null
+                                        }
+                                    </div>
+                                </div>
+
+
+
                                 <div className="row border">
                                     <div className="col-2">
                                         <label className="control-label">{self.T("title")}</label>
@@ -490,12 +617,38 @@ class Document extends BaseComponent {
                                         <input type="text" className="form-control" onChange={(e) => self.SetValueCommon("documentnumber", e.target.value)} value={self.state.Document.documentnumber}></input>
                                     </div>
                                 </div>
+                                <div className="row border">
+                                    <div className="col-3">
+                                        <label className="control-label">
+                                            {self.T("officialjournalnumber")}
+                                        </label>
+                                    </div>
+                                    <div className="col-9">
+                                        <input type="text" className="form-control" onChange={(e) => self.SetValueCommon("officialjournalnumber", e.target.value)} value={self.state.Document.officialjournalnumber}></input>
+                                    </div>
+                                </div>
+                                <div className="row border">
+                                    <div className="col-3">
+                                        <label className="control-label">
+                                            {self.T("officialjournalyear")}
+                                        </label>
+                                    </div>
+                                    <div className="col-9">
+                                        <input type="text" className="form-control" onChange={(e) => self.SetValueCommon("officialjournalyear", e.target.value)} value={self.state.Document.officialjournalyear}></input>
+                                    </div>
+                                </div>
 
                             </div>
                             :
 
                             <div className="col-9  border">
-                                <PartEdit getProperty={self.GetSelectedNodeProperty} setProperty={self.SetSelectedNodeProperty} selectedNodeId={self.state.SelectedNodeId}></PartEdit>
+                                <PartEdit getProperty={self.GetSelectedNodeProperty} 
+                                setProperty={self.SetSelectedNodeProperty} 
+                                selectedNodeId={self.state.SelectedNodeId}
+                                annullePart = {self.AnnullePart}
+                                annuledInfo = {self.state.CPAnnuledInfo}
+
+                                ></PartEdit>
                             </div>
                         }
                     </div>
@@ -521,8 +674,8 @@ class Document extends BaseComponent {
                             </div>
                         </div>
                     </Dialog>
-                    <Dialog header={self.T("selectdocument")} visible={this.state.SelectDocumentVisible} style={{ width: '50vw' }} 
-                    modal={true} onHide={() => self.setState({ SelectDocumentVisible: false })} >
+                    <Dialog header={self.T("selectdocument")} visible={this.state.SelectDocumentVisible} style={{ width: '50vw' }}
+                        modal={true} onHide={() => self.setState({ SelectDocumentVisible: false })} >
                         <DocSelect onlyDocument={false} selectSuccess={self.SelectDocumentPart}></DocSelect>
                     </Dialog>
                 </div >

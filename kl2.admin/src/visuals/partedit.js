@@ -2,48 +2,53 @@ import React from 'react';
 import languages from '../data/languages';
 import { SelectButton } from 'primereact/selectbutton';
 import BaseComponent from '../components/basecomponent';
-import { EditorState, ContentState, convertFromHTML } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { stateToHTML } from "draft-js-export-html";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
 
 
 class PartEdit extends BaseComponent {
+
+
+
     LanguageSelectItems;
+
     constructor(props) {
         super(props);
-        this.GetContentValue = this.GetContentValue.bind(this);
-        this.SetContentValue = this.SetContentValue.bind(this);
 
+
+
+        this.SetContentValue = this.SetContentValue.bind(this);
+        
 
         this.LanguageSelectItems = languages.map((item, i) => { return { label: item.title, value: item.key } });
 
         this.state.language = languages[0].key;
 
+
+
+
+        this.state.text = this.props.getProperty(this.state.language, "text");
+
     }
 
-    GetContentValue() {
-        var blocksFromHTML = convertFromHTML(
-            this.props.getProperty(this.state.language, "text")
-        );
-        var content = ContentState.createFromBlockArray(
-            blocksFromHTML.contentBlocks,
-            blocksFromHTML.entityMap
-        );
 
-        return EditorState.createWithContent(content);
-    }
 
-    SetContentValue(editorState) {
-        this.props.setProperty(this.state.language, "text", stateToHTML(editorState.getCurrentContent()))
+    SetContentValue(value) {
+        this.setState({ text: value })
+        
+        this.props.setProperty(this.state.language, "text", value);
 
     };
 
-    componentDidUpdate(prevProps) {
-        if (this.props.selectedNodeId !== prevProps.selectedNodeId) {
-            this.setState({ _dt: Date.now() });
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.selectedNodeId !== prevProps.selectedNodeId || this.state.language != prevState.language) {
+            //this.setState({ _dt: Date.now() });
+            var s = this.props.getProperty(this.state.language, "text");
+            this.setState({ text: s });
         }
     }
+
 
 
 
@@ -51,6 +56,20 @@ class PartEdit extends BaseComponent {
         var self = this;
         return (
             [
+                <div className="row">
+                    <div className="col-2">
+                        <div class="checkbox">
+                            <label><input type="checkbox" checked={self.props.getProperty(null, "annulled")} onChange={(e) => self.props.annullePart(e.target.checked)} />{self.T("annulled")}</label>
+                        </div>
+                    </div>
+                    <div className="col-10">
+                        {
+                            self.props.annuledInfo ?
+                                <label>{self.props.annuledInfo.title[self.SM.GetLanguage()]} {self.props.annuledInfo.part[self.SM.GetLanguage()]}</label>
+                                : null
+                        }
+                    </div>
+                </div>,
                 <div className="row">
                     <div className="col-12">
                         <SelectButton value={self.state.language} options={self.LanguageSelectItems} onChange={(e) => self.setState({ language: e.value, _dt: Date.now() })}></SelectButton>
@@ -64,23 +83,17 @@ class PartEdit extends BaseComponent {
                     </div>
 
                 </div>,
+
                 <div className="row">
                     <div className="col-12" key={self.state._dt}>
-                        <label className="control-label">{self.T("content")}</label>
-                        <Editor
-                            defaultEditorState={self.GetContentValue()}
-                            onEditorStateChange={this.SetContentValue}
-                            toolbar={{
-                                options: ['image'],
+                    <label className="control-label">{self.T("content")}</label>
+                        <ReactQuill value={this.state.text}
+                            onChange={this.SetContentValue} 
+                            theme="snow"
+                            
+                            
+                            />
 
-                                image: {
-                                    urlEnabled: false,
-                                    uploadEnabled: true,
-                                    uploadCallback: self.uploadCallback
-
-                                }
-                            }}
-                        />
                     </div>
 
                 </div>

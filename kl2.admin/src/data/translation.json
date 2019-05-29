@@ -26,6 +26,10 @@
         "document": "Document",
         "content": "Content",
         "selectdocument": "Select document",
-        "searchstringnotfound": "Search string not found"
+        "searchstringnotfound": "Search string not found",
+        "officialjournalnumber": "Official Journal Number",
+        "officialjournalyear": "Official Journal Year",
+        "annulled": "Annulled",
+        "link": "Link"
     }
 }

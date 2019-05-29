@@ -16,7 +16,7 @@ class DocSelect extends BaseComponent {
         this.CreateTree = this.CreateTree.bind(this);
         this.DocumentElementTemplate = this.DocumentElementTemplate.bind(this);
         this.SelectPart = this.SelectPart.bind(this);
-        
+
         this.state.SearchResult = null;
         this.state.DisplayMode = "documents";
     }
@@ -87,7 +87,8 @@ class DocSelect extends BaseComponent {
         }
     }
 
-    SelectPart(id){
+    SelectPart(id) {
+        this.setState({ DisplayMode: "documents" });
         this.props.selectSuccess(this.state.SelectedDocumentId, id);
     }
 
@@ -100,7 +101,7 @@ class DocSelect extends BaseComponent {
 
         );
     }
-
+    
 
     render() {
         var self = this;
@@ -145,7 +146,7 @@ class DocSelect extends BaseComponent {
                         </div>
                     </div>
                 ]
-                :
+                :                
                 <Tree
                     selectionMode="single"
                     value={self.state.TreeData}
