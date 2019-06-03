@@ -50,12 +50,17 @@ class MainMenu extends BaseComponent {
 
 
     render() {
+        var self = this;
         return (
 
             <div className="container mt-3">
                 <Link className="btn btn-default" to='/doc/123'>
                     <i className="fas fa-list"></i>
                     <p>ьььььььь</p>
+                </Link>
+                <Link className="btn btn-default" to='/categories'>
+                    <i className="fas fa-list"></i>
+                    <p>{self.T("categories")}</p>
                 </Link>
                 <br />
                 

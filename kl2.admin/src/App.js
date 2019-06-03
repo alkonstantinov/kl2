@@ -9,6 +9,7 @@ import Header from './components/header';
 import eventClient from './modules/eventclient';
 import MainMenu from './components/mainmenu';
 import Document from './components/document';
+import Categories from './components/categories';
 
 
 class App extends BaseComponent {
@@ -52,6 +53,7 @@ class App extends BaseComponent {
               :
               <Switch>
                 <Route exact path='/mainmenu' component={MainMenu} />
+                <Route exact path='/categories' component={Categories} />
                 <Route exact path='/doc' component={Document} />
                 <Route exact path='/doc/:docId' component={Document} />
 

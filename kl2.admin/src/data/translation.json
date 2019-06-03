@@ -30,6 +30,11 @@
         "officialjournalnumber": "Official Journal Number",
         "officialjournalyear": "Official Journal Year",
         "annulled": "Annulled",
-        "link": "Link"
+        "link": "Link",
+        "categories": "Categories",
+        "new": "New",
+        "edit": "Edit",
+        "delete": "Delete",
+        "newcategory": "New Category"
     }
 }
