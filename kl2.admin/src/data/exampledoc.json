@@ -8,6 +8,10 @@
   "officialjournalyear": "2019",
   "dateEnd": null,
   "annulled": true,
+  "categories": [
+    "q1",
+    "q2"
+  ],
   "annulledDocInfo": {
     "id": "1",
     "partid": "2"

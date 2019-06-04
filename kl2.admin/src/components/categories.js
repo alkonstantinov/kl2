@@ -11,15 +11,17 @@ import Loader from 'react-loader-spinner';
 import Languages from '../data/languages';
 import uuidv4 from 'uuid/v4';
 import MLEdit from '../visuals/mledit';
+import { toast } from 'react-toastify';
 
 
 
 export default class Categories extends BaseComponent {
-    Id2Data = {}
+
+    expandedNodes;
 
     constructor(props) {
         super(props);
-        this.CreateTree = this.CreateTree.bind(this);
+        this.CreateExpandedNodes = this.CreateExpandedNodes.bind(this);
         this.DocumentElementTemplate = this.DocumentElementTemplate.bind(this);
         this.ChangeSelectedNode = this.ChangeSelectedNode.bind(this);
         this.FindById = this.FindById.bind(this);
@@ -28,24 +30,18 @@ export default class Categories extends BaseComponent {
         this.MovePart = this.MovePart.bind(this);
         this.NewCategory = this.NewCategory.bind(this);
         this.ChangeTitle = this.ChangeTitle.bind(this);
+        this.SaveToDB = this.SaveToDB.bind(this)
 
 
     }
 
-    CreateTree(elementFromJSON, ExpandedNodes) {
+    CreateExpandedNodes(elementFromJSON, ExpandedNodes) {
 
-        let element = Object.create(null);
-        element.key = elementFromJSON.id;
-        element.label = elementFromJSON.title[this.SM.GetLanguage()];
-
-        element.children = [];
-        ExpandedNodes[elementFromJSON.id] = true;
+        ExpandedNodes[elementFromJSON.key] = true;
+        var self = this;
         elementFromJSON.children.forEach(x =>
-            element.children.push(this.CreateTree(x, ExpandedNodes))
+            self.CreateExpandedNodes(x, ExpandedNodes)
         );
-
-
-        return element;
     }
 
 
@@ -55,11 +51,23 @@ export default class Categories extends BaseComponent {
 
 
     componentDidMount() {
-        
+        var self = this;
+
         Axios.get('https://www.dir.bg').then(
             result => {
 
                 var treeJSON = categories;
+                self.expandedNodes = { "-1": true };
+                var treeJSON = [{
+                    key: "-1",
+                    label: this.T("categories"),
+                    data: {},
+                    children: treeJSON
+                }];
+
+
+                this.CreateExpandedNodes(treeJSON[0], self.expandedNodes);
+
                 this.DisplayTree("-1", treeJSON);
 
 
@@ -74,9 +82,15 @@ export default class Categories extends BaseComponent {
 
     DocumentElementTemplate(node) {
 
-        return (<span>
-            {node.label}
-        </span>);
+        if (node.key == "-1")
+            return (<span>
+                {this.TranslateIntoLanguage("categories", this.SM.GetLanguage())}
+            </span>);
+        else
+            return (<span>
+                {node.data[this.SM.GetLanguage()]}
+            </span>);
+
     }
 
     ChangeSelectedNode(nodeId) {
@@ -88,7 +102,7 @@ export default class Categories extends BaseComponent {
 
     FindById(id, jsonArray) {
         for (var i = 0; i < jsonArray.length; i++) {
-            if (jsonArray[i].id === id) {
+            if (jsonArray[i].key === id) {
                 return {
                     array: jsonArray,
                     index: i,
@@ -111,25 +125,12 @@ export default class Categories extends BaseComponent {
     }
 
     DisplayTree(selectedId, json) {
-        var expandedNodes = { "-1": true };
-        var treeData = [{
-            key: "-1",
-            label: this.T("categories"),
-            data: {}
-        }];
-
-
-        treeData[0].children = json.map(item => this.CreateTree(item, expandedNodes));
-
-        console.log(expandedNodes);
 
         this.setState({
             TreeJSON: json,
-            DisplayMode: "tree", //requisites, content,
-            TreeData: treeData,
             SelectedNodeId: selectedId,
             SelectionInfo: this.FindById(selectedId, json),
-            ExpandedNodes: expandedNodes
+            ExpandedNodes: this.expandedNodes
         });
 
     }
@@ -149,25 +150,46 @@ export default class Categories extends BaseComponent {
         var id = uuidv4();
 
         var nc = {
-            id: id,
+            key: id,
             title: {},
+            data: {},
             children: []
         };
         var self = this;
-        Languages.forEach(item => nc.title[item.key] = self.TranslateIntoLanguage("newcategory", item.key));
+        Languages.forEach(item => nc.data[item.key] = self.TranslateIntoLanguage("newcategory", item.key));
 
         if (this.state.SelectedNodeId == "-1")
-            json.push(nc);
+            json[0].children.push(nc);
         else
             this.state.SelectionInfo.element.children.push(nc);
+
+        this.expandedNodes[id] = true;
 
         this.DisplayTree(id, json);
 
     }
 
     ChangeTitle(language, value) {
-        this.state.SelectionInfo.element.title[language] = value;
-        this.setState({ SelectionInfo: this.state.SelectionInfo });
+        this.state.SelectionInfo.element.data[language] = value;
+        this.setState({ SelectionInfo: this.state.SelectionInfo, TreeJSON: this.state.TreeJSON });
+    }
+
+    SaveToDB() {
+        var self = this;
+
+        Axios.get('https://www.dir.bg').then(
+            result => {
+
+                
+                    toast.info(self.T("datasaved"));
+    
+
+
+            }).catch(
+                function (response) {
+                    toast.error(response);
+                }
+            );
     }
 
 
@@ -181,7 +203,7 @@ export default class Categories extends BaseComponent {
                         <div className="col-9">
                             <Tree
                                 selectionMode="single"
-                                value={self.state.TreeData}
+                                value={self.state.TreeJSON}
                                 style={{ marginTop: '.5em', width: '100%' }}
                                 nodeTemplate={self.DocumentElementTemplate}
                                 expandedKeys={self.state.ExpandedNodes}
@@ -194,21 +216,17 @@ export default class Categories extends BaseComponent {
                         </div>
                         <div className="col-3">
                             <div className="row">
-                                <div className="col-12">
+                                <div className="col-4">
                                     <button className="btn btn-primary" onClick={self.NewCategory}>{self.T("new")}</button>
                                 </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-12">
+                                <div className="col-4">
                                     {
                                         self.state.SelectedNodeId != "-1" ?
                                             <button className="btn btn-secondary">{self.T("edit")}</button>
                                             : null
                                     }
                                 </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-12">
+                                <div className="col-4">
                                     {
                                         self.state.SelectedNodeId != "-1" ?
                                             <button className="btn btn-danger" onClick={self.DeleteCategory}>{self.T("delete")}</button>
@@ -218,16 +236,14 @@ export default class Categories extends BaseComponent {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-12">
+                                <div className="col-1">
                                     {
                                         self.state.SelectionInfo && self.state.SelectionInfo.index > 0 ?
                                             <button className="btn btn-light" onClick={() => self.MovePart(true)}><i className="fas fa-sort-up fa-lg"></i></button>
                                             : null
                                     }
                                 </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-12">
+                                <div className="col-1">
                                     {
                                         self.state.SelectionInfo && self.state.SelectionInfo.index < self.state.SelectionInfo.array.length - 1 ?
                                             <button className="btn btn-light" onClick={() => self.MovePart(false)}><i className="fas fa-sort-down fa-lg"></i></button>
@@ -240,9 +256,14 @@ export default class Categories extends BaseComponent {
                                 <div className="col-12">
                                     {
                                         self.state.SelectedNodeId != "-1" ?
-                                            <MLEdit prefix="title" parent={self.state.SelectionInfo.element.title} change={self.ChangeTitle}></MLEdit>
+                                            <MLEdit prefix="title" parent={self.state.SelectionInfo.element.data} change={self.ChangeTitle}></MLEdit>
                                             : null
                                     }
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-12">
+                                    <button className="btn btn-primary" onClick={self.SaveToDB}>{self.T("savetodb")}</button>
                                 </div>
                             </div>
 

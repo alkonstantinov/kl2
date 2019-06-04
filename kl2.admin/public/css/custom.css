@@ -56,3 +56,7 @@ body {
 .DraftEditor-root{
   background-color: #FFFFFF;
 }
+
+.row{
+  margin-top: 10px
+}

@@ -44,7 +44,7 @@ class App extends BaseComponent {
 
       <div className="container-fluid">
         <Header></Header>
-        <ToastContainer position={toast.POSITION.TOP_LEFT} autoClose={5000} />
+        <ToastContainer position={toast.POSITION.TOP_LEFT} autoClose={2000} hideProgressBar={true}/>
 
         <main>
           {

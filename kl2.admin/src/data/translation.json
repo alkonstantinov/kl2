@@ -35,6 +35,9 @@
         "new": "New",
         "edit": "Edit",
         "delete": "Delete",
-        "newcategory": "New Category"
+        "newcategory": "New Category",
+        "savetodb": "Save To DB",
+        "datasaved": "Data is saved",
+        "ok": "OK"
     }
 }

@@ -11,6 +11,8 @@ class BaseComponent extends Component {
         this.HandleChange = this.HandleChange.bind(this);
         this.HandleSubmit = this.HandleSubmit.bind(this);
         this.Refresh = this.Refresh.bind(this);
+        this.ConvertArrayToObject = this.ConvertArrayToObject.bind(this);
+
 
         this.state = {
             Error: null,
@@ -53,7 +55,23 @@ class BaseComponent extends Component {
         this.setState({ spinner: false });
     }
 
-    
+
+    ConvertArrayToObject(array) {
+        var result = new Object(null);
+        array.forEach(item => result[item] = true);
+
+        return result;
+    }
+
+    ConvertObjectToArray(obj) {
+        var result = [];
+        Object.keys(obj).forEach(item => {
+            if (obj[item])
+                result.push(item)
+        });
+
+        return result;
+    }
 
 
     render() {

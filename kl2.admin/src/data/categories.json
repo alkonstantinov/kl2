@@ -1,22 +1,22 @@
 [
     {
-        "id": "q1",
-        "title": {
+        "key": "q1",
+        "data": {
             "en": "Category 1",
             "sq": "Kategory 1"
         },
         "children": [
             {
-                "id": "q2",
-                "title": {
+                "key": "q2",
+                "data": {
                     "en": "Category 2",
                     "sq": "Kategory 2"
                 },
                 "children": []
             },
             {
-                "id": "q3",
-                "title": {
+                "key": "q3",
+                "data": {
                     "en": "Category 3",
                     "sq": "Kategory 3"
                 },
@@ -25,8 +25,8 @@
         ]
     },
     {
-        "id": "q4",
-        "title": {
+        "key": "q4",
+        "data": {
             "en": "Category 4",
             "sq": "Kategory 4"
         },

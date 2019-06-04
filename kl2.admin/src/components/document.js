@@ -20,6 +20,7 @@ import Languages from '../data/languages';
 import PartEdit from '../visuals/partedit';
 import DocSelect from '../visuals/docselect';
 import docpartresponse from '../data/docpartresponse';
+import CategoriesSelect from '../visuals/categoriesselect';
 
 class Document extends BaseComponent {
     DocId = null;
@@ -47,6 +48,7 @@ class Document extends BaseComponent {
         this.GetCitedDocumentFromServer = this.GetCitedDocumentFromServer.bind(this);
         this.AnnulleDocument = this.AnnulleDocument.bind(this);
         this.AnnullePart = this.AnnullePart.bind(this);
+        this.SetCategories = this.SetCategories.bind(this);
 
 
 
@@ -57,7 +59,8 @@ class Document extends BaseComponent {
         this.state.Document = null;
         this.state.SelectDateDialogVisible = false;
         this.state.SelectDocumentVisible = false;
-        
+        this.state.SelectCategoriesVisible = false;
+
 
 
 
@@ -347,7 +350,7 @@ class Document extends BaseComponent {
 
     SetSelectedNodeProperty(lang, prop, value) {
         var doc = this.state.Document;
-        doc.paragraphs[this.state.SelectedNodeId][prop][lang] = value;        
+        doc.paragraphs[this.state.SelectedNodeId][prop][lang] = value;
         this.setState({ Document: doc });
     }
 
@@ -414,7 +417,7 @@ class Document extends BaseComponent {
 
     }
 
-    
+
 
     AnnulleDocument(annulle) {
         var doc = this.state.Document;
@@ -460,6 +463,12 @@ class Document extends BaseComponent {
     }
 
 
+    SetCategories(categoriesObj) {
+        var doc = this.state.Document;
+        console.log(categoriesObj);
+        doc.categories = this.ConvertObjectToArray(categoriesObj);
+        this.setState({ Document: doc, SelectCategoriesVisible: false });
+    }
     render() {
         var self = this;
         return (
@@ -566,6 +575,11 @@ class Document extends BaseComponent {
                                         }
                                     </div>
                                 </div>
+                                <div className="row border">
+                                    <div className="col-12">
+                                        <button className="btn btn-info" onClick={() => self.setState({ SelectCategoriesVisible: true })}>{self.T("categories")}</button>
+                                    </div>
+                                </div>
 
 
 
@@ -642,11 +656,11 @@ class Document extends BaseComponent {
                             :
 
                             <div className="col-9  border">
-                                <PartEdit getProperty={self.GetSelectedNodeProperty} 
-                                setProperty={self.SetSelectedNodeProperty} 
-                                selectedNodeId={self.state.SelectedNodeId}
-                                annullePart = {self.AnnullePart}
-                                annuledInfo = {self.state.CPAnnuledInfo}
+                                <PartEdit getProperty={self.GetSelectedNodeProperty}
+                                    setProperty={self.SetSelectedNodeProperty}
+                                    selectedNodeId={self.state.SelectedNodeId}
+                                    annullePart={self.AnnullePart}
+                                    annuledInfo={self.state.CPAnnuledInfo}
 
                                 ></PartEdit>
                             </div>
@@ -677,6 +691,10 @@ class Document extends BaseComponent {
                     <Dialog header={self.T("selectdocument")} visible={this.state.SelectDocumentVisible} style={{ width: '50vw' }}
                         modal={true} onHide={() => self.setState({ SelectDocumentVisible: false })} >
                         <DocSelect onlyDocument={false} selectSuccess={self.SelectDocumentPart}></DocSelect>
+                    </Dialog>
+                    <Dialog header={self.T("categories")} visible={this.state.SelectCategoriesVisible} style={{ width: '50vw' }}
+                        modal={true} onHide={() => self.setState({ SelectCategoriesVisible: false })} >
+                        <CategoriesSelect selectSuccess={self.SelectCategories} ref="catSelect" categories={self.state.Document.categories} setcategories={self.SetCategories}></CategoriesSelect>
                     </Dialog>
                 </div >
 
