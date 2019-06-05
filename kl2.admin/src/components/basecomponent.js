@@ -36,10 +36,10 @@ class BaseComponent extends Component {
 
 
     HandleChange = event => {
+        var rec = this.state.Rec;
+        rec[event.target.id]= event.target.value;
         this.setState({
-            Rec: {
-                [event.target.id]: event.target.value
-            }
+            Rec: rec
         });
     }
 

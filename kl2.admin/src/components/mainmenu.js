@@ -54,9 +54,9 @@ class MainMenu extends BaseComponent {
         return (
 
             <div className="container mt-3">
-                <Link className="btn btn-default" to='/doc/123'>
+                <Link className="btn btn-default" to='/documentsearch'>
                     <i className="fas fa-list"></i>
-                    <p>ьььььььь</p>
+                    <p>{self.T("documents")}</p>
                 </Link>
                 <Link className="btn btn-default" to='/categories'>
                     <i className="fas fa-list"></i>

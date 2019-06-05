@@ -38,6 +38,12 @@
         "newcategory": "New Category",
         "savetodb": "Save To DB",
         "datasaved": "Data is saved",
-        "ok": "OK"
+        "ok": "OK",
+        "documents": "Documents",
+        "search": "Search",
+        "unpublished": "Unpublished",
+        "fromdate": "From Date",
+        "todate": "To Date",
+        "publish": "Publish"
     }
 }

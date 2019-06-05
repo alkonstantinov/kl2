@@ -1,0 +1,35 @@
+[
+    {
+        "id": 1,
+        "title": {
+            "en": "law 1",
+            "sq": "law 1"
+        },
+        "annulled": true,
+        "canPublish": true,
+        "fromDate": "20131218",
+        "toDate": "20131218"
+    },
+    {
+        "id": 2,
+        "title": {
+            "en": "law 2",
+            "sq": "law 2"
+        },
+        "annulled": false,
+        "canPublish": false,
+        "fromDate": "20131218",
+        "toDate": null
+    },
+    {
+        "id": 3,
+        "title": {
+            "en": "law 3",
+            "sq": "law 3"
+        },
+        "annulled": true,
+        "canPublish": true,
+        "fromDate": "20131218",
+        "toDate": "20131218"
+    }
+]

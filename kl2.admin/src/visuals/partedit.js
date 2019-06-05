@@ -53,7 +53,7 @@ class PartEdit extends BaseComponent {
     };
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.selectedNodeId !== prevProps.selectedNodeId || this.state.language != prevState.language) {
+        if (this.props.selectedNodeId !== prevProps.selectedNodeId || this.state.language !== prevState.language) {
             //this.setState({ _dt: Date.now() });
             var s = this.props.getProperty(this.state.language, "text");
             this.setState({ text: s });
