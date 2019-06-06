@@ -12,6 +12,8 @@ class BaseComponent extends Component {
         this.HandleSubmit = this.HandleSubmit.bind(this);
         this.Refresh = this.Refresh.bind(this);
         this.ConvertArrayToObject = this.ConvertArrayToObject.bind(this);
+        this.ValidateEmail = this.ValidateEmail.bind(this);
+
 
 
         this.state = {
@@ -37,7 +39,7 @@ class BaseComponent extends Component {
 
     HandleChange = event => {
         var rec = this.state.Rec;
-        rec[event.target.id]= event.target.value;
+        rec[event.target.id] = event.target.type === "checkbox" ? event.target.checked : event.target.value;
         this.setState({
             Rec: rec
         });
@@ -71,6 +73,10 @@ class BaseComponent extends Component {
         });
 
         return result;
+    }
+
+    ValidateEmail(mail) {
+        return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/.test(mail);
     }
 
 

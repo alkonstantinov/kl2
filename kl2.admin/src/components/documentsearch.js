@@ -18,7 +18,7 @@ export default class DocumentSearch extends BaseComponent {
         this.ChangeSelectedNode = this.ChangeSelectedNode.bind(this);
         this.Search = this.Search.bind(this);
         this.ShowUnpublished = this.ShowUnpublished.bind(this);
-        
+
         this.state.Searching = false;
     }
 
@@ -212,7 +212,12 @@ export default class DocumentSearch extends BaseComponent {
                                 <input type="text" className="form-control" value={self.state.Rec.SS} id="SS" onChange={self.HandleChange}></input>
                             </div>
                             <div className="col-2">
-                                <button className="btn btn-primary" onClick={self.Search}>{self.T("search")}</button>
+                                {
+                                    self.state.Rec.SS && self.state.Rec.SS !== "" ?
+                                        <button className="btn btn-primary" onClick={self.Search}>{self.T("search")}</button>
+                                        : null
+                                }
+
                             </div>
                             <div className="col-2">
                                 <button className="btn btn-danger" onClick={self.ShowUnpublished}>{self.T("unpublished")}</button>
@@ -231,7 +236,7 @@ export default class DocumentSearch extends BaseComponent {
                                     />
                                         :
                                         self.state.DocumentList ?
-                                            <table className="table table-stripped">
+                                            <table className="table table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>

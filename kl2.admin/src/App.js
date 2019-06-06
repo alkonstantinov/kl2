@@ -11,6 +11,7 @@ import MainMenu from './components/mainmenu';
 import Document from './components/document';
 import Categories from './components/categories';
 import DocumentSearch from './components/documentsearch';
+import Users from './components/users';
 
 
 class App extends BaseComponent {
@@ -58,6 +59,7 @@ class App extends BaseComponent {
                 <Route exact path='/doc' component={Document} />
                 <Route exact path='/doc/:docId' component={Document} />
                 <Route exact path='/documentsearch' component={DocumentSearch} />
+                <Route exact path='/users' component={Users} />
 
                 <Route component={MainMenu} />
 
@@ -70,9 +72,9 @@ class App extends BaseComponent {
 
 
 
-        <footer className="navbar fixed-bottom">
+        {/* <footer className="navbar fixed-bottom">
           footer
-        </footer>
+        </footer> */}
       </div>
 
 
