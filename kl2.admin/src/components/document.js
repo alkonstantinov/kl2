@@ -21,6 +21,7 @@ import PartEdit from '../visuals/partedit';
 import DocSelect from '../visuals/docselect';
 import docpartresponse from '../data/docpartresponse';
 import CategoriesSelect from '../visuals/categoriesselect';
+import { toast } from 'react-toastify';
 
 class Document extends BaseComponent {
     DocId = null;
@@ -30,10 +31,17 @@ class Document extends BaseComponent {
         eventClient.emit(
             "breadcrump",
             [{
-                title: this.T("mainmenu")
+                title: this.T("mainmenu"),
+                href: ""
+            },
+            {
+                title: this.T("documents"),
+                href: "documentsearch"
+            },
+            {
+                title: this.T("users")
             }]
-        );
-
+        )
         this.ChangeTitle = this.ChangeTitle.bind(this);
         this.ChangeSelectedNode = this.ChangeSelectedNode.bind(this);
         this.CreateTree = this.CreateTree.bind(this);
@@ -49,8 +57,10 @@ class Document extends BaseComponent {
         this.AnnulleDocument = this.AnnulleDocument.bind(this);
         this.AnnullePart = this.AnnullePart.bind(this);
         this.SetCategories = this.SetCategories.bind(this);
+        this.Save = this.Save.bind(this);
 
-
+        this.dsDoc = React.createRef();
+        this.csCategories = React.createRef();
 
         if (this.props.match.params.docId)
             this.DocId = this.props.match.params.docId;
@@ -140,6 +150,8 @@ class Document extends BaseComponent {
 
 
     ShowSelectDateDialog() {
+        this.refs.dsDoc.current.GoToStart();
+
         this.setState({ SelectDocumentVisible: true });
     }
 
@@ -469,6 +481,28 @@ class Document extends BaseComponent {
         doc.categories = this.ConvertObjectToArray(categoriesObj);
         this.setState({ Document: doc, SelectCategoriesVisible: false });
     }
+
+    Save() {
+        var self = this;
+
+
+
+        Axios.get('https://www.dir.bg').then(
+            result => {
+
+                //toast.error(self.T("mailused"));
+                toast.info(self.T("savedok"));
+
+            }).catch(
+                function (response) {
+                    console.log(response);
+                    self.setState({
+                        Searching: false
+                    });
+                }
+            );
+    }
+
     render() {
         var self = this;
         return (
@@ -483,7 +517,7 @@ class Document extends BaseComponent {
                             <div className="row border">
 
                                 <div className="col-12">
-                                    <button className="btn btn-danger" onClick={self.ShowSelectDateDialog}>{self.T("newversion")}</button>
+                                    <button className="btn btn-primary" onClick={self.Save}>{self.T("save")}</button>
                                 </div>
                             </div>
                             <div className="row border">
@@ -690,11 +724,11 @@ class Document extends BaseComponent {
                     </Dialog>
                     <Dialog header={self.T("selectdocument")} visible={this.state.SelectDocumentVisible} style={{ width: '50vw' }}
                         modal={true} onHide={() => self.setState({ SelectDocumentVisible: false })} >
-                        <DocSelect onlyDocument={false} selectSuccess={self.SelectDocumentPart}></DocSelect>
+                        <DocSelect onlyDocument={false} selectSuccess={self.SelectDocumentPart} ref={this.dsDoc}></DocSelect>
                     </Dialog>
                     <Dialog header={self.T("categories")} visible={this.state.SelectCategoriesVisible} style={{ width: '50vw' }}
-                        modal={true} onHide={() => self.setState({ SelectCategoriesVisible: false })} >
-                        <CategoriesSelect selectSuccess={self.SelectCategories} ref="catSelect" categories={self.state.Document.categories} setcategories={self.SetCategories}></CategoriesSelect>
+                        modal={true} onHide={() => { this.csCategories.current.Reload(); self.setState({ SelectCategoriesVisible: false }); }} >
+                        <CategoriesSelect selectSuccess={self.SelectCategories} ref="catSelect" categories={self.state.Document.categories} setcategories={self.SetCategories} ref={this.csCategories}></CategoriesSelect>
                     </Dialog>
                 </div >
 

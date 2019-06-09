@@ -27,7 +27,7 @@ class PartEdit extends BaseComponent {
         this.EndPutLink = this.EndPutLink.bind(this);
         this.PutLegal = this.PutLegal.bind(this);
         this.RemoveLegal = this.RemoveLegal.bind(this);
-        
+
 
         this.LanguageSelectItems = languages.map((item, i) => { return { label: item.title, value: item.key } });
 
@@ -35,7 +35,7 @@ class PartEdit extends BaseComponent {
 
         this.qlEditor = React.createRef();
 
-
+        this.dsDoc = React.createRef();
 
 
         this.state.text = this.props.getProperty(this.state.language, "text");
@@ -62,6 +62,8 @@ class PartEdit extends BaseComponent {
 
 
     StartPutLink() {
+        this.dsDoc.current.GoToStart();
+
         this.setState({ ShowSelectDocumentDialog: true })
     }
 
@@ -88,7 +90,7 @@ class PartEdit extends BaseComponent {
             });
         }
 
-        
+
     }
 
     RemoveLegal() {
@@ -99,7 +101,7 @@ class PartEdit extends BaseComponent {
             this.qlEditor.current.editor.insertText(range.index, text);
         }
 
-        
+
     }
 
 
@@ -113,7 +115,7 @@ class PartEdit extends BaseComponent {
                 <div className="row">
                     <Dialog header={self.T("selectdocument")} visible={this.state.ShowSelectDocumentDialog} style={{ width: '50vw' }}
                         modal={true} onHide={() => self.setState({ ShowSelectDocumentDialog: false })} >
-                        <DocSelect onlyDocument={false} selectSuccess={self.EndPutLink}></DocSelect>
+                        <DocSelect onlyDocument={false} selectSuccess={self.EndPutLink} ref={this.dsDoc}></DocSelect>
                     </Dialog>
 
                     <div className="col-2">

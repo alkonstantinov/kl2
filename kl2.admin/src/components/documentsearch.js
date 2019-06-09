@@ -7,12 +7,24 @@ import categories from '../data/categories.json';
 import Loader from 'react-loader-spinner';
 import documentlist from '../data/documentlist.json';
 import moment from 'moment';
+import eventClient from '../modules/eventclient';
 
 export default class DocumentSearch extends BaseComponent {
 
     expandedNodes;
     constructor(props) {
         super(props);
+        eventClient.emit(
+            "breadcrump",
+            [{
+                title: this.T("mainmenu"),
+                href: ""
+            },
+            {
+                title: this.T("documents")
+            }]
+        )
+
         this.CreateExpandedNodes = this.CreateExpandedNodes.bind(this);
         this.DocumentElementTemplate = this.DocumentElementTemplate.bind(this);
         this.ChangeSelectedNode = this.ChangeSelectedNode.bind(this);
@@ -263,7 +275,7 @@ export default class DocumentSearch extends BaseComponent {
                                                                 <tr>
                                                                     <td>
 
-                                                                        <Link to='/doc/{item.id}'>
+                                                                        <Link to={'/doc/' + item.id}>
                                                                             {item.title[self.SM.GetLanguage()]}
                                                                         </Link>
 

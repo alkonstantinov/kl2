@@ -21,6 +21,17 @@ export default class Categories extends BaseComponent {
 
     constructor(props) {
         super(props);
+        eventClient.emit(
+            "breadcrump",
+            [{
+                title: this.T("mainmenu"),
+                href: ""
+            },
+            {
+                title: this.T("categories")
+            }]
+        )
+
         this.CreateExpandedNodes = this.CreateExpandedNodes.bind(this);
         this.DocumentElementTemplate = this.DocumentElementTemplate.bind(this);
         this.ChangeSelectedNode = this.ChangeSelectedNode.bind(this);

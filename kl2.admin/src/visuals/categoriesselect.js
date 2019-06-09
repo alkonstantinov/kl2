@@ -26,6 +26,7 @@ export default class CategoriesSelect extends BaseComponent {
         this.DisplayTree = this.DisplayTree.bind(this);
         this.CheckCategory = this.CheckCategory.bind(this);
         this.SetCategories = this.SetCategories.bind(this);
+        this.Reload = this.Reload.bind(this);
 
         this.state.Checks = {};
 
@@ -38,6 +39,12 @@ export default class CategoriesSelect extends BaseComponent {
         elementFromJSON.children.forEach(x =>
             self.CreateExpandedNodes(x, ExpandedNodes)
         );
+    }
+
+    Reload() {
+        var checks = this.ConvertArrayToObject(this.props.categories);
+        this.setState({ Checks: checks, TreeJSON: this.state.TreeJSON });
+
     }
 
 

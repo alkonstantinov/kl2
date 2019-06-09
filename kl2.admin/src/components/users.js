@@ -1,4 +1,5 @@
 import React from 'react';
+import eventClient from '../modules/eventclient';
 import BaseComponent from './basecomponent';
 import Loader from 'react-loader-spinner';
 import Axios from 'axios';
@@ -8,6 +9,17 @@ import { toast } from 'react-toastify';
 export default class Users extends BaseComponent {
     constructor(props) {
         super(props);
+        eventClient.emit(
+            "breadcrump",
+            [{
+                title: this.T("mainmenu"),
+                href: ""
+            },
+            {
+                title: this.T("users")
+            }]
+        )
+
 
         this.Search = this.Search.bind(this);
         this.ShowMore = this.ShowMore.bind(this);

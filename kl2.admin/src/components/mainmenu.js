@@ -54,19 +54,29 @@ class MainMenu extends BaseComponent {
         return (
 
             <div className="container mt-3">
-                <Link className="btn btn-default" to='/documentsearch'>
-                    <i class="fas fa-search"></i>
-                    <p>{self.T("documents")}</p>
-                </Link>
-                <Link className="btn btn-default" to='/categories'>
-                    <i class="fas fa-sitemap"></i>
-                    <p>{self.T("categories")}</p>
-                </Link>
-                <Link className="btn btn-default" to='/users'>
-                    <i class="fas fa-users"></i>
-                    <p>{self.T("users")}</p>
-                </Link>
-                <br />
+                <div className="row">
+                    <div className="col-3">
+                        <Link className="btn btn-default fillSpace" to='/documentsearch'>
+                            <i class="fas fa-search"></i>
+                            <p>{self.T("documents")}</p>
+                        </Link>
+
+                    </div>
+                    <div className="col-3">
+                        <Link className="btn btn-default fillSpace" to='/categories'>
+                            <i class="fas fa-sitemap"></i>
+                            <p>{self.T("categories")}</p>
+                        </Link>
+
+                    </div>
+                    <div className="col-3">
+                        <Link className="btn btn-default fillSpace" to='/users'>
+                            <i class="fas fa-users"></i>
+                            <p>{self.T("users")}</p>
+                        </Link>
+
+                    </div>
+                </div>
 
             </div>
 

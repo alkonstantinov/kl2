@@ -49,7 +49,7 @@ class Header extends BaseComponent {
                             self.state.breadcrumbs.map((obj, i) =>
                                 <span key={i}>
                                     {
-                                        obj.href ?
+                                        obj.href!==undefined ?
                                             <Link to={'/' + obj.href} key={i}>
                                                 {obj.title}
                                             </Link>
