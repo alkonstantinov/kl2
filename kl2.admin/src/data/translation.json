@@ -58,6 +58,8 @@
         "mailinvalid": "Invalid email",
         "namemandatory": "Please, enter name",
         "save": "Save",
-        "savedok":"Saved successfully"
+        "savedok": "Saved successfully",
+        "older": "Older",
+        "newer": "Newer"
     }
 }

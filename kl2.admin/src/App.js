@@ -12,6 +12,7 @@ import Document from './components/document';
 import Categories from './components/categories';
 import DocumentSearch from './components/documentsearch';
 import Users from './components/users';
+import NewDoc from './components/newdoc';
 
 
 class App extends BaseComponent {
@@ -58,6 +59,7 @@ class App extends BaseComponent {
                 <Route exact path='/categories' component={Categories} />
                 <Route exact path='/doc' component={Document} />
                 <Route exact path='/doc/:docId' component={Document} />
+                <Route exact path='/newdoc/:docId' component={NewDoc} />
                 <Route exact path='/documentsearch' component={DocumentSearch} />
                 <Route exact path='/users' component={Users} />
 
