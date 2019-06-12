@@ -28,7 +28,8 @@ class Login extends BaseComponent {
             .then(result => {
                 self.SM.SetSession({
                     username: "Александър Константинов",
-                    token: 123
+                    token: 123,
+                    level: "user"
                 });
                 eventClient.emit("loginchange");
             })

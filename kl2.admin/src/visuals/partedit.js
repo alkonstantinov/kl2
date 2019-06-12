@@ -7,6 +7,7 @@ import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
 import { Dialog } from 'primereact/dialog';
 import DocSelect from '../visuals/docselect';
+import Axios from 'axios';
 
 
 
@@ -104,9 +105,61 @@ class PartEdit extends BaseComponent {
 
     }
 
+    async imageHandler() {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+        input.onchange = async function() {
+          const file = input.files[0];
+          console.log('User trying to uplaod this:', file);
+    
+          let res = await Axios.get("https://www.dir.bg");
+          window.alert(res.data);
+          const id = 123;
+          
+          //await uploadFile(file); // I'm using react, so whatever upload function
+          const range = this.quill.getSelection();
+          const link = "https://avatars0.githubusercontent.com/u/28754907?s=460&v=4";
+    
+          // this part the image is inserted
+          // by 'image' option below, you just have to put src(link) of img here. 
+          this.quill.insertEmbed(range.index, 'image', link); 
+        }.bind(this); // react thing
+      }
+
+    
+
 
     render() {
         var self = this;
+
+        var modules = {
+            toolbar: 
+            {
+                container:[
+                    [{ 'header': '1' }, { 'header': '2' }],
+                    [{ size: [] }],
+                    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' },
+                    { 'indent': '-1' }, { 'indent': '+1' }],
+                    ['link', 'image'],
+                    ['clean']
+                ],
+                handlers: { "image": self.imageHandler }
+ 
+
+            }
+            
+        };
+    
+        var formats = [
+            'header', 'color', 'size',
+            'bold', 'italic', 'underline', 'strike', 'blockquote',
+            'list', 'bullet', 'indent',
+            'link', 'image'
+        ];
+    
         return (
 
 
@@ -156,6 +209,8 @@ class PartEdit extends BaseComponent {
                         <ReactQuill value={this.state.text}
                             onChange={this.SetContentValue}
                             theme="snow"
+                            modules={modules}
+                            formats={formats}
                             ref={this.qlEditor}
 
                         />

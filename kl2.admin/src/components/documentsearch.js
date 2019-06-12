@@ -58,7 +58,7 @@ export default class DocumentSearch extends BaseComponent {
 
                 var treeJSON = categories;
                 self.expandedNodes = { "-1": true };
-                var treeJSON = [{
+                treeJSON = [{
                     key: "-1",
                     label: this.T("categories"),
                     data: {},
@@ -132,8 +132,7 @@ export default class DocumentSearch extends BaseComponent {
 
 
     Search() {
-        var rec = this.state.Rec;
-
+        
         this.setState({
             SelectedNodeId: "-1",
             Searching: true

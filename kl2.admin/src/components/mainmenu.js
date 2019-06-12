@@ -51,30 +51,40 @@ class MainMenu extends BaseComponent {
 
     render() {
         var self = this;
+        var uLevel = this.SM.GetSession().level;
         return (
 
             <div className="container mt-3">
                 <div className="row">
                     <div className="col-3">
-                        <Link className="btn btn-default fillSpace" to='/documentsearch'>
-                            <i class="fas fa-search"></i>
-                            <p>{self.T("documents")}</p>
-                        </Link>
-
+                        {
+                            uLevel === "user" ?
+                                <Link className="btn btn-default fillSpace" to='/documentsearch'>
+                                    <i className="fas fa-search"></i>
+                                    <p>{self.T("documents")}</p>
+                                </Link>
+                                : null
+                        }
                     </div>
                     <div className="col-3">
-                        <Link className="btn btn-default fillSpace" to='/categories'>
-                            <i class="fas fa-sitemap"></i>
-                            <p>{self.T("categories")}</p>
-                        </Link>
-
+                        {
+                            uLevel === "user" ?
+                                <Link className="btn btn-default fillSpace" to='/categories'>
+                                    <i className="fas fa-sitemap"></i>
+                                    <p>{self.T("categories")}</p>
+                                </Link>
+                                : null
+                        }
                     </div>
                     <div className="col-3">
-                        <Link className="btn btn-default fillSpace" to='/users'>
-                            <i class="fas fa-users"></i>
-                            <p>{self.T("users")}</p>
-                        </Link>
-
+                        {
+                            uLevel === "admin" ?
+                                <Link className="btn btn-default fillSpace" to='/users'>
+                                    <i className="fas fa-users"></i>
+                                    <p>{self.T("users")}</p>
+                                </Link>
+                                : null
+                        }
                     </div>
                 </div>
 
