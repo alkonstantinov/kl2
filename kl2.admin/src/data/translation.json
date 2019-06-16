@@ -60,6 +60,15 @@
         "save": "Save",
         "savedok": "Saved successfully",
         "older": "Older",
-        "newer": "Newer"
+        "newer": "Newer",
+        "nomenclatures": "Nomenclatures",
+        "issuers": "Issuers",
+        "doctypes": "Document Types",
+        "newitem": "New Item",
+        "enterpassword": "Please, enter password",
+        "repeatpassword": "Please, repeat password",
+        "passwordmustnotbeempty": "Password, must not be empty",
+        "passworddonotmatch": "Passwords do not match",
+        "passwordchanged": "Password changed"
     }
 }

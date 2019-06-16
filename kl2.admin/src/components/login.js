@@ -29,7 +29,7 @@ class Login extends BaseComponent {
                 self.SM.SetSession({
                     username: "Александър Константинов",
                     token: 123,
-                    level: "user"
+                    level: "admin"
                 });
                 eventClient.emit("loginchange");
             })

@@ -1,26 +1,34 @@
 {
-    "issuers":[
+    "issuers": [
         {
-            "id":"1",
-            "en":"Parliament",
-            "sq":"Da Parlament"
+            "id": "1",
+            "title": {
+                "en": "Parliament",
+                "sq": "Da Parlament"
+            }
         },
         {
-            "id":"2",
-            "en":"Court",
-            "sq":"Da KORT"
+            "id": "2",
+            "title": {
+                "en": "Court",
+                "sq": "Da KORT"
+            }
         }
     ],
-    "doctypes":[
+    "doctypes": [
         {
-            "id":"1",
-            "en":"Constitution",
-            "sq":"Da KONSTITUTION"
+            "id": "1",
+            "title": {
+                "en": "Constitution",
+                "sq": "Da KONSTITUTION"
+            }
         },
         {
-            "id":"2",
-            "en":"Law",
-            "sq":"Da LOU"
+            "id": "2",
+            "title": {
+                "en": "low",
+                "sq": "Da LAW"
+            }
         }
     ]
 }

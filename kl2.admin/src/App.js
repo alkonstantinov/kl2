@@ -13,6 +13,7 @@ import Categories from './components/categories';
 import DocumentSearch from './components/documentsearch';
 import Users from './components/users';
 import NewDoc from './components/newdoc';
+import Nomenclatures from './components/nomenclatures';
 
 
 class App extends BaseComponent {
@@ -62,6 +63,7 @@ class App extends BaseComponent {
                 <Route exact path='/newdoc/:docId' component={NewDoc} />
                 <Route exact path='/documentsearch' component={DocumentSearch} />
                 <Route exact path='/users' component={Users} />
+                <Route exact path='/nomenclatures' component={Nomenclatures} />
 
                 <Route component={MainMenu} />
 

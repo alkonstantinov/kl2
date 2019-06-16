@@ -78,6 +78,16 @@ class MainMenu extends BaseComponent {
                     </div>
                     <div className="col-3">
                         {
+                            uLevel === "user" ?
+                                <Link className="btn btn-default fillSpace" to='/nomenclatures'>
+                                    <i className="fas fa-align-justify"></i>
+                                    <p>{self.T("nomenclatures")}</p>
+                                </Link>
+                                : null
+                        }
+                    </div>
+                    <div className="col-3">
+                        {
                             uLevel === "admin" ?
                                 <Link className="btn btn-default fillSpace" to='/users'>
                                     <i className="fas fa-users"></i>
