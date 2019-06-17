@@ -26,8 +26,7 @@ export default class Users extends BaseComponent {
         this.Edit = this.Edit.bind(this);
         this.Cancel = this.Cancel.bind(this);
         this.Save = this.Save.bind(this);
-        this.ChangePassword = this.ChangePassword.bind(this);
-
+        
         this.state.Searching = false;
         this.state.Mode = "search"
     }
@@ -170,31 +169,7 @@ export default class Users extends BaseComponent {
         });
     }
 
-    ChangePassword(userId) {
-        var self = this;
-        var p1 = window.prompt(this.T("enterpassword"));
-        if (p1 ==="") {
-            toast.error(self.T("passwordmustnotbeempty"));
-            return;
-        }
-        var p2 = window.prompt(this.T("repeatpassword"));
-        if (p1 !== p2) {
-            toast.error(self.T("passworddonotmatch"));
-            return;
-        }
-        Axios.get('https://www.dir.bg').then(
-            result => {
-
-                toast.success(self.T("passwordchanged"));
-
-
-            }).catch(
-                function (response) {
-                    console.log(response);
-                }
-            );
-
-    }
+    
 
     render() {
         var self = this;
@@ -284,7 +259,6 @@ export default class Users extends BaseComponent {
                                                                 <tr key={index}>
                                                                     <td>
                                                                         <a href="#" onClick={() => self.Edit(item)}>{item.name}</a>
-                                                                        <i className="fas fa-user-lock" onClick={() => self.ChangePassword(item.id)}></i>
                                                                     </td>
                                                                     <td>
                                                                         {item.mail}
