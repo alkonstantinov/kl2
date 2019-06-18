@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,6 +9,6 @@ namespace kl2.server.DB.Models
     {
         public String JsonType { get; set; }
 
-        public JToken
+        public String JsonData { get; set; }
     }
 }

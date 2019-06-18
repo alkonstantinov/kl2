@@ -93,13 +93,15 @@ returns table (EditDate date, PublishDate date, DocumentData jsonb)
   where d.DocumentID = _DocumentID
 $$ LANGUAGE sql; 
 
-create or replace function Admin.UpdateDOCUMENT (_DocumentID uuid, _DocumentData jsonb) 
+
+--drop function Admin.UpdateDOCUMENT(_DocumentID uuid, _DocumentData jsonb) 
+create or replace function Admin.UpdateDOCUMENT (_DocumentData jsonb) 
 returns void
  as $$
   update Admin.Document
   set DocumentData = _DocumentData,
   EditDate = now()
-  where DocumentID = _DocumentID
+  where DocumentID = (_DocumentData->>'id')::uuid
 $$ LANGUAGE sql; 
 
 --drop function Admin.UpdateDOCUMENT (_DocumentData jsonb) 
