@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kl2.server.DB", "kl2.server.DB\kl2.server.DB.csproj", "{6463A972-2F51-4DFB-B37B-EE782EF4260B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kl2.server.Admin", "kl2.server.Admin\kl2.server.Admin.csproj", "{01029222-5D6C-447D-9D7A-024B1C4DD82A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6463A972-2F51-4DFB-B37B-EE782EF4260B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6463A972-2F51-4DFB-B37B-EE782EF4260B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6463A972-2F51-4DFB-B37B-EE782EF4260B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6463A972-2F51-4DFB-B37B-EE782EF4260B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01029222-5D6C-447D-9D7A-024B1C4DD82A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01029222-5D6C-447D-9D7A-024B1C4DD82A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01029222-5D6C-447D-9D7A-024B1C4DD82A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01029222-5D6C-447D-9D7A-024B1C4DD82A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {182EC72D-6AC3-4A87-8620-6AAE63FC0E07}
+	EndGlobalSection
+EndGlobal

@@ -39,6 +39,8 @@ returns uuid
   declare _token uuid;
 begin
 
+  perform 'select Admin.RemoveOldSessions()';
+
   select into _token md5(random()::text || clock_timestamp()::text)::uuid;
 
   delete from Admin.Session where AdmUserId = _AdmUserId;
@@ -143,6 +145,8 @@ returns void
 $$ LANGUAGE sql; 
 
 
+
+--select * from Admin.SearchUsers(0,100,'alex');
 create or replace function Admin.SearchUsers (_top int, _rowCount int,_ss citext) 
 returns table (Total bigint, AdmUserID int, Name character varying, UserTypeID citext,  Mail citext,  Active boolean)
  as $$
