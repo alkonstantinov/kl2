@@ -395,7 +395,7 @@ namespace kl2.server.DB
             return result;
         }
 
-        public Guid SaveImage(Guid imageHash, byte[] image)
+        public Guid SaveImage(string imageHash, byte[] image)
         {
             var conn = this.OpenConnection();
             Guid result = new Guid();
