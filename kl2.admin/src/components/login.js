@@ -5,7 +5,8 @@ import Axios from 'axios';
 import { toast } from 'react-toastify';
 import { Redirect } from 'react-router-dom';
 import eventClient from '../modules/eventclient';
-
+import serverdata from '../data/serverdata.json';
+import Comm from '../modules/comm';
 
 
 
@@ -23,18 +24,27 @@ class Login extends BaseComponent {
 
         this.ShowSpin();
         var self = this;
+        var postData = {
+            mail: self.state.Rec.username,
+            password: self.state.Rec.password
 
-        Axios.get('https://www.dir.bg')
+        };
+
+        Comm.Instance().post('admin/login', postData)
             .then(result => {
                 self.SM.SetSession({
-                    username: "Александър Константинов",
-                    token: 123,
-                    level: "admin"
+                    username: result.data.name,
+                    token: result.data.token,
+                    level: result.data.type
                 });
+                Comm.Instance().defaults.headers.common['Authorization'] = result.data.token;
                 eventClient.emit("loginchange");
             })
             .catch(error => {
-                toast.error(error.message);
+                if (error.response.status === 401)
+                    toast.error(self.T("invalidusernameorpassword"));
+                else
+                    toast.error(error.message);
 
             })
             .then(() => self.HideSpin());
@@ -63,9 +73,9 @@ class Login extends BaseComponent {
                             <div className="form-signin">
                                 <h2 className="form-signin-heading">{self.T("pleasesignin")}</h2>
                                 <label htmlFor="inputEmail" className="control-label">{self.T("username")}</label>
-                                <input type="email" id="inputEmail" className="form-control" placeholder={self.T("username")} required autoFocus value={self.state.Rec.username} onChange={self.HandleChange}></input>
+                                <input type="email" id="username" className="form-control" placeholder={self.T("username")} required autoFocus value={self.state.Rec.username} onChange={self.HandleChange}></input>
                                 <label htmlFor="inputPassword" className="control-label">{self.T("password")}</label>
-                                <input type="password" id="inputPassword" className="form-control" placeholder={self.T("password")} required value={self.state.Rec.password} onChange={self.HandleChange}></input>
+                                <input type="password" id="password" className="form-control" placeholder={self.T("password")} required value={self.state.Rec.password} onChange={self.HandleChange}></input>
 
                                 <button className="btn btn-lg btn-primary btn-block" type="button" onClick={self.Login}>{self.T("signin")}</button>
                             </div>

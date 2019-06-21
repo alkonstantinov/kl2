@@ -58,7 +58,7 @@ class MainMenu extends BaseComponent {
                 <div className="row">
                     <div className="col-3">
                         {
-                            uLevel === "user" ?
+                            uLevel === "operator" ?
                                 <Link className="btn btn-default fillSpace" to='/documentsearch'>
                                     <i className="fas fa-search"></i>
                                     <p>{self.T("documents")}</p>
@@ -68,7 +68,7 @@ class MainMenu extends BaseComponent {
                     </div>
                     <div className="col-3">
                         {
-                            uLevel === "user" ?
+                            uLevel === "operator" ?
                                 <Link className="btn btn-default fillSpace" to='/categories'>
                                     <i className="fas fa-sitemap"></i>
                                     <p>{self.T("categories")}</p>
@@ -78,7 +78,7 @@ class MainMenu extends BaseComponent {
                     </div>
                     <div className="col-3">
                         {
-                            uLevel === "user" ?
+                            uLevel === "operator" ?
                                 <Link className="btn btn-default fillSpace" to='/nomenclatures'>
                                     <i className="fas fa-align-justify"></i>
                                     <p>{self.T("nomenclatures")}</p>
@@ -88,7 +88,7 @@ class MainMenu extends BaseComponent {
                     </div>
                     <div className="col-3">
                         {
-                            uLevel === "admin" ?
+                            uLevel === "administrator" ?
                                 <Link className="btn btn-default fillSpace" to='/users'>
                                     <i className="fas fa-users"></i>
                                     <p>{self.T("users")}</p>

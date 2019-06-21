@@ -4,12 +4,12 @@ import { Redirect } from 'react-router-dom';
 import BaseComponent from './basecomponent';
 import { Tree } from 'primereact/tree';
 import Axios from 'axios';
-import categories from '../data/categories.json';
 import Loader from 'react-loader-spinner';
 import documentlist from '../data/documentlist.json';
 import moment from 'moment';
 import eventClient from '../modules/eventclient';
 import uuidv4 from 'uuid/v4';
+import Comm from '../modules/comm';
 
 export default class DocumentSearch extends BaseComponent {
 
@@ -34,7 +34,7 @@ export default class DocumentSearch extends BaseComponent {
         this.ShowUnpublished = this.ShowUnpublished.bind(this);
         this.NewDocument = this.NewDocument.bind(this);
         this.Delete = this.Delete.bind(this);
-        
+
 
         this.state.Searching = false;
     }
@@ -52,11 +52,11 @@ export default class DocumentSearch extends BaseComponent {
 
     componentDidMount() {
         var self = this;
-
-        Axios.get('https://www.dir.bg').then(
+        Comm.Instance().get('admin/GetJSON?jsonType=categories').then(
             result => {
 
-                var treeJSON = categories;
+                var treeJSON = JSON.parse(result.data[0].jsonData);
+
                 self.expandedNodes = { "-1": true };
                 treeJSON = [{
                     key: "-1",
@@ -80,6 +80,9 @@ export default class DocumentSearch extends BaseComponent {
                     console.log(response);
                 }
             );
+
+
+
 
 
     }
@@ -108,11 +111,13 @@ export default class DocumentSearch extends BaseComponent {
         var self = this;
 
         if (nodeId != "-1") {
+            var postData = { SS: nodeId };
 
-            Axios.get('https://www.dir.bg').then(
+            Comm.Instance().post('admin/SearchDocument', postData).then(
                 result => {
 
-                    var resultList = documentlist;
+                    var resultList = result.data;
+                    resultList.forEach(x => x.documentData = JSON.parse(x.documentData));
                     self.setState({
                         Searching: false,
                         DocumentList: resultList
@@ -132,7 +137,7 @@ export default class DocumentSearch extends BaseComponent {
 
 
     Search() {
-        
+
         this.setState({
             SelectedNodeId: "-1",
             Searching: true
@@ -141,10 +146,13 @@ export default class DocumentSearch extends BaseComponent {
 
 
 
-        Axios.get('https://www.dir.bg').then(
+        var postData = { SS: self.state.Rec.SS, LimitResult: 100 };
+
+        Comm.Instance().post('admin/SearchDocument', postData).then(
             result => {
 
-                var resultList = documentlist;
+                var resultList = result.data;
+                resultList.forEach(x => x.documentData = JSON.parse(x.documentData));
                 self.setState({
                     Searching: false,
                     DocumentList: resultList
@@ -176,10 +184,11 @@ export default class DocumentSearch extends BaseComponent {
 
 
 
-        Axios.get('https://www.dir.bg').then(
+        Comm.Instance().get('admin/UnpublishedDocuments').then(
             result => {
 
-                var resultList = documentlist;
+                var resultList = result.data;
+                resultList.forEach(x => x.documentData = JSON.parse(x.documentData));
                 self.setState({
                     Searching: false,
                     DocumentList: resultList
@@ -225,12 +234,12 @@ export default class DocumentSearch extends BaseComponent {
             )
     }
 
-    Delete(id,i){
+    Delete(id, i) {
         var self = this;
-        Axios.get("https://www.dir.bg")
+        Comm.Instance().get('admin/DeleteDOCUMENT?documentId=' + id)
             .then(result => {
                 var dl = self.state.DocumentList;
-                dl.splice(i,1);
+                dl.splice(i, 1);
                 self.setState({ DocumentList: dl })
 
             })
@@ -273,11 +282,9 @@ export default class DocumentSearch extends BaseComponent {
                                     <input type="text" className="form-control" value={self.state.Rec.SS} id="SS" onChange={self.HandleChange}></input>
                                 </div>
                                 <div className="col-2">
-                                    {
-                                        self.state.Rec.SS && self.state.Rec.SS !== "" ?
-                                            <button className="btn btn-primary" onClick={self.Search}>{self.T("search")}</button>
-                                            : null
-                                    }
+
+                                    <button className="btn btn-primary" onClick={self.Search}>{self.T("search")}</button>
+
 
                                 </div>
                                 <div className="col-2">
@@ -301,66 +308,68 @@ export default class DocumentSearch extends BaseComponent {
                                         />
                                             :
                                             self.state.DocumentList ?
-                                                <table className="table table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>
-                                                                {self.T("title")}
-                                                            </th>
-                                                            <th>
-                                                                {self.T("annulled")}
-                                                            </th>
-                                                            <th>
-                                                                {self.T("fromdate")}
-                                                            </th>
-                                                            <th>
-                                                                {self.T("todate")}
-                                                            </th>
-                                                            <th>
-                                                                {self.T("publish")}
-                                                            </th>
-                                                            <th>
-                                                                
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {
-                                                            self.state.DocumentList.map(
-                                                                (item ,i) =>
-                                                                    <tr>
-                                                                        <td>
+                                                self.state.DocumentList.length === 0 ?
+                                                    <div className="alert alert-danger">{self.T("notfound")}</div> :
+                                                    <table className="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>
+                                                                    {self.T("title")}
+                                                                </th>
+                                                                <th>
+                                                                    {self.T("annulled")}
+                                                                </th>
+                                                                <th>
+                                                                    {self.T("fromdate")}
+                                                                </th>
+                                                                <th>
+                                                                    {self.T("todate")}
+                                                                </th>
+                                                                <th>
+                                                                    {self.T("publish")}
+                                                                </th>
+                                                                <th>
 
-                                                                            <Link to={'/doc/' + item.id}>
-                                                                                {item.title[self.SM.GetLanguage()]}
-                                                                            </Link>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {
+                                                                self.state.DocumentList.map(
+                                                                    (item, i) =>
+                                                                        <tr>
+                                                                            <td>
 
-                                                                        </td>
-                                                                        <td>
-                                                                            {item.annulled ? <i class="fas fa-check"></i> : null}
-                                                                        </td>
-                                                                        <td>
-                                                                            {item.fromDate ? moment(item.fromDate, "YYYYMMDD").format("DD.MM.YYYY") : null}
-                                                                        </td>
-                                                                        <td>
-                                                                            {item.toDate ? moment(item.toDate, "YYYYMMDD").format("DD.MM.YYYY") : null}
-                                                                        </td>
-                                                                        <td>
-                                                                            {
-                                                                                item.canPublish ?
-                                                                                    <i className="fas fa-upload"></i>
-                                                                                    : null
-                                                                            }
-                                                                        </td>
-                                                                        <td>
-                                                                                    <i className="fas fa-trash-alt" onClick={()=>self.Delete(item.id,i)}></i>
-                                                                            
-                                                                        </td>
-                                                                    </tr>
-                                                            )
-                                                        }
-                                                    </tbody>
-                                                </table>
+                                                                                <Link to={'/doc/' + item.documentData.id}>
+                                                                                    {item.documentData.title[self.SM.GetLanguage()]}
+                                                                                </Link>
+
+                                                                            </td>
+                                                                            <td>
+                                                                                {item.documentData.annulled ? <i class="fas fa-check"></i> : null}
+                                                                            </td>
+                                                                            <td>
+                                                                                {item.documentData.dateStart ? moment(item.documentData.dateStart, "YYYYMMDD").format("DD.MM.YYYY") : null}
+                                                                            </td>
+                                                                            <td>
+                                                                                {item.documentData.dateEnd ? moment(item.documentData.dateEnd, "YYYYMMDD").format("DD.MM.YYYY") : null}
+                                                                            </td>
+                                                                            <td>
+                                                                                {
+                                                                                    item.publishDate && item.publishDate < item.editDate ?
+                                                                                        <i className="fas fa-upload"></i>
+                                                                                        : null
+                                                                                }
+                                                                            </td>
+                                                                            <td>
+                                                                                <i className="fas fa-trash-alt" onClick={() => self.Delete(item.documentData.id, i)}></i>
+
+                                                                            </td>
+                                                                        </tr>
+                                                                )
+                                                            }
+                                                        </tbody>
+                                                    </table>
                                                 : null
                                     }
 

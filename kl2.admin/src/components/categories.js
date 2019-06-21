@@ -5,13 +5,13 @@ import { SelectButton } from 'primereact/selectbutton';
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import { Tree } from 'primereact/tree';
-import categories from '../data/categories.json';
 import Axios from 'axios';
 import Loader from 'react-loader-spinner';
 import Languages from '../data/languages';
 import uuidv4 from 'uuid/v4';
 import MLEdit from '../visuals/mledit';
 import { toast } from 'react-toastify';
+import Comm from '../modules/comm';
 
 
 
@@ -64,12 +64,12 @@ export default class Categories extends BaseComponent {
     componentDidMount() {
         var self = this;
 
-        Axios.get('https://www.dir.bg').then(
+        Comm.Instance().get('admin/GetJSON?jsonType=categories').then(
             result => {
 
-                var treeJSON = categories;
+                var treeJSON = JSON.parse(result.data[0].jsonData);
                 self.expandedNodes = { "-1": true };
-                var treeJSON = [{
+                treeJSON = [{
                     key: "-1",
                     label: this.T("categories"),
                     data: {},
@@ -187,13 +187,15 @@ export default class Categories extends BaseComponent {
 
     SaveToDB() {
         var self = this;
+        var postData = [{ jsonType: "categories", jsonData: JSON.stringify(this.state.TreeJSON[0].children) }];
 
-        Axios.get('https://www.dir.bg').then(
+
+        Comm.Instance().post('admin/UpdateJSON', postData).then(
             result => {
 
-                
-                    toast.info(self.T("datasaved"));
-    
+
+                toast.info(self.T("datasaved"));
+
 
 
             }).catch(
@@ -201,6 +203,8 @@ export default class Categories extends BaseComponent {
                     toast.error(response);
                 }
             );
+
+
     }
 
 

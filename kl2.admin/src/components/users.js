@@ -5,8 +5,10 @@ import Loader from 'react-loader-spinner';
 import Axios from 'axios';
 import userlist from '../data/userlist';
 import { toast } from 'react-toastify';
+import Comm from '../modules/comm';
 
 export default class Users extends BaseComponent {
+    RowCount = 10;
     constructor(props) {
         super(props);
         eventClient.emit(
@@ -26,7 +28,7 @@ export default class Users extends BaseComponent {
         this.Edit = this.Edit.bind(this);
         this.Cancel = this.Cancel.bind(this);
         this.Save = this.Save.bind(this);
-        
+
         this.state.Searching = false;
         this.state.Mode = "search"
     }
@@ -41,16 +43,19 @@ export default class Users extends BaseComponent {
         var self = this;
 
 
+        var postData = {
+            SS: this.state.Rec.SS,
+            Top: 0,
+            RowCount: this.RowCount
+        };
 
-        Axios.get('https://www.dir.bg').then(
+        Comm.Instance().post('admin/SearchUsers', postData).then(
             result => {
-
-                var resultList = userlist;
                 self.setState({
                     Searching: false,
-                    Rows: userlist.rows,
-                    Count: userlist.count,
-                    SearchSS: userlist.ss
+                    Rows: result.data,
+                    Count: result.data && result.data.length > 0 ? result.data[0].Total : 0,
+                    SearchSS: postData.SS
                 });
 
 
@@ -107,9 +112,9 @@ export default class Users extends BaseComponent {
         var rec = this.state.Rec;
 
         if (obj) {
-            rec.id = obj.id;
+            rec.id = obj.admUserID;
             rec.name = obj.name;
-            rec.type = obj.type;
+            rec.type = obj.userTypeID;
             rec.mail = obj.mail;
             rec.active = obj.active;
 
@@ -117,7 +122,7 @@ export default class Users extends BaseComponent {
         else {
             rec.id = null;
             rec.name = "";
-            rec.type = "user";
+            rec.type = "operator";
             rec.mail = "";
             rec.active = true;
         }
@@ -129,37 +134,60 @@ export default class Users extends BaseComponent {
 
 
     }
-    Save() {
+    async Save() {
         var self = this;
+        if (self.state.Rec.name === "") {
+            toast.error(self.T("namemandatory"));
+            return;
+        }
 
+        if (self.state.Rec.id === null && (self.state.Rec.password || "") === "") {
+            toast.error(self.T("passwordmandatory"));
+            return;
+        }
 
+        if (!self.ValidateEmail(self.state.Rec.mail)) {
+            toast.error(self.T("mailinvalid"));
+            return;
+        }
 
-        Axios.get('https://www.dir.bg').then(
-            result => {
+        var mailExists = true;
+        if (!self.state.Rec.id)
+            await Comm.Instance().get('admin/mailexists?mail=' + self.state.Rec.mail).then(
+                result => {
+                    mailExists = result.data;
+                }).catch(
+                    function (response) {
+                        console.log(response);
+                        self.setState({
+                            Searching: false
+                        });
+                    }
+                );
+        else
+            mailExists = false;
+        if (mailExists) {
+            toast.error(self.T("mailused"));
+            return;
+        }
 
-                //toast.error(self.T("mailused"));
+        var postData = {
+            AdmUserID: self.state.Rec.id,
+            Name: self.state.Rec.name,
+            UserTypeID: self.state.Rec.type,
+            Mail: self.state.Rec.mail,
+            Password: self.state.Rec.password,
+            Active: this.state.Rec.active
+        };
+        if (postData.AdmUserID === null)
+            Comm.Instance().post('admin/NewUser', postData).then(result => window.alert(result));
+        else
+            Comm.Instance().post('admin/SaveUser', postData);
 
-                if (!self.ValidateEmail(self.state.Rec.mail)) {
-                    toast.error(self.T("mailinvalid"));
-                    return;
-                }
+        this.setState({
+            mode: "search"
+        });
 
-                if (self.state.Rec.name === "") {
-                    toast.error(self.T("namemandatory"));
-                    return;
-                }
-                this.setState({
-                    mode: "search"
-                });
-
-            }).catch(
-                function (response) {
-                    console.log(response);
-                    self.setState({
-                        Searching: false
-                    });
-                }
-            );
 
     }
 
@@ -169,7 +197,7 @@ export default class Users extends BaseComponent {
         });
     }
 
-    
+
 
     render() {
         var self = this;
@@ -178,23 +206,30 @@ export default class Users extends BaseComponent {
                 {
                     self.state.mode === "edit" ?
                         [
-                            <div className="row">
-                                <div className="col-12">
-                                    <label className="control-label">{self.T("email")}</label>
-                                    <input type="text" className="form-control" value={self.state.Rec.mail} id="mail" onChange={self.HandleChange} readOnly={self.state.Rec.id !== null}></input>
+                            <form autoComplete={false}>
+                                <div className="row">
+                                    <div className="col-12">
+                                        <label className="control-label">{self.T("email")}</label>
+                                        <input type="text" className="form-control" value={self.state.Rec.mail} id="mail" onChange={self.HandleChange} readOnly={self.state.Rec.id !== null} name="asdasdsa"></input>
+                                    </div>
                                 </div>
-                            </div>,
-                            <div className="row">
-                                <div className="col-12">
-                                    <label className="control-label">{self.T("name")}</label>
-                                    <input type="text" className="form-control" value={self.state.Rec.name} id="name" onChange={self.HandleChange}></input>
+                                <div className="row">
+                                    <div className="col-12">
+                                        <label className="control-label">{self.T("name")}</label>
+                                        <input type="text" className="form-control" value={self.state.Rec.name} id="name" onChange={self.HandleChange}></input>
+                                    </div>
                                 </div>
-                            </div>,
+                                <div className="row">
+                                    <div className="col-12">
+                                        <label className="control-label">{self.T("password")}</label>
+                                        <input type="password" className="form-control" value={self.state.Rec.password} id="password" onChange={self.HandleChange} autoComplete="new-password" ></input>
+                                    </div>
+                                </div>
+                            </form>,
                             <div className="row">
                                 <div className="col-12">
                                     <label className="control-label">{self.T("type")}</label>
                                     <select className="form-control" value={self.state.Rec.type} id="type" onChange={self.HandleChange}>
-                                        <option value="user">{self.T("user")}</option>
                                         <option value="operator">{self.T("operator")}</option>
                                         <option value="administrator">{self.T("administrator")}</option>
                                     </select>
@@ -220,11 +255,7 @@ export default class Users extends BaseComponent {
                                     <input type="text" className="form-control" value={self.state.Rec.SS} id="SS" onChange={self.HandleChange}></input>
                                 </div>
                                 <div className="col-2">
-                                    {
-                                        self.state.Rec.SS && self.state.Rec.SS !== "" ?
-                                            <button className="btn btn-primary" onClick={self.Search}>{self.T("search")}</button>
-                                            : null
-                                    }
+                                    <button className="btn btn-primary" onClick={self.Search}>{self.T("search")}</button>
 
                                 </div>
                                 <div className="col-2">
@@ -264,7 +295,7 @@ export default class Users extends BaseComponent {
                                                                         {item.mail}
                                                                     </td>
                                                                     <td>
-                                                                        {self.TranslateIntoLanguage(item.type, self.SM.GetLanguage())}
+                                                                        {self.TranslateIntoLanguage(item.userTypeID, self.SM.GetLanguage())}
                                                                     </td>
                                                                     <td>
                                                                         {item.active ? <i className="fas fa-check"></i> : null}

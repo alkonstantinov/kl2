@@ -118,7 +118,7 @@ returns table (DocumentID uuid, EditDate date, PublishDate date, DocumentData js
  as $$
   select DocumentID, EditDate, PublishDate, DocumentData
   from Admin.Document d
-  where to_tsvector(DocumentData) @@ to_tsquery(ss)
+  where ss='' or ss is null or to_tsvector(DocumentData) @@ to_tsquery(ss)
   limit limitResult;
 $$ LANGUAGE sql; 
 
@@ -156,11 +156,11 @@ returns table (Total bigint, AdmUserID int, Name character varying, UserTypeID c
   select 
   (
     select count(1) from Admin.AdmUser 
-    where to_tsvector(Name || ' ' || Mail) @@ to_tsquery(_ss)
+    where _ss is null or _ss='' or to_tsvector(Name || ' ' || Mail) @@ to_tsquery(_ss)
   ),
   AdmUserID, Name, UserTypeID, Mail, Active 
   from Admin.AdmUser 
-  where to_tsvector(Name || ' ' || Mail) @@ to_tsquery(_ss)
+  where _ss is null or _ss='' or to_tsvector(Name || ' ' || Mail) @@ to_tsquery(_ss)
   limit _rowCount offset _top;
  
   
@@ -177,6 +177,12 @@ returns void
     Password = coalesce (_Password, Password),
     Active = _Active
   where AdmUserID = _AdmUserID
+$$ LANGUAGE sql; 
+
+create or replace function Admin.MailExists (_Mail citext) 
+returns Table(id int)
+ as $$  
+  select 1 from Admin.AdmUser where mail = _Mail;
 $$ LANGUAGE sql; 
 
 create or replace function Admin.NewUser (_Name character varying, _UserTypeID citext, _Mail citext, _Password citext, _Active boolean) 

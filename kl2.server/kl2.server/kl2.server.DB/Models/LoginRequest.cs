@@ -8,6 +8,17 @@ namespace kl2.server.DB.Models
     {
         public String Mail { get; set; }
 
-        public String Password { get; set; }
+        private string password;
+        public String Password
+        {
+            get
+            {
+                return password;
+            }
+            set
+            {
+                password = kl2.server.common.Utils.GetMD5(value);
+            }
+        }
     }
 }

@@ -12,4 +12,8 @@
     <PackageReference Include="Npgsql" Version="4.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\kl2.server.common\kl2.server.common.csproj" />
+  </ItemGroup>
+
 </Project>

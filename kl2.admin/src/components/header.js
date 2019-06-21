@@ -3,6 +3,7 @@ import BaseComponent from './basecomponent';
 import eventClient from '../modules/eventclient';
 import { Link } from 'react-router-dom';
 import Language from './language';
+import Comm from '../modules/comm';
 
 class Header extends BaseComponent {
     constructor(props) {
@@ -31,9 +32,11 @@ class Header extends BaseComponent {
         eventClient.removeEventListener('breadcrump', this.SetBreadcrump);
     }
 
-    
+
 
     Logout() {
+
+        Comm.Instance().get('admin/logout').then(result => alert(result));
         this.SM.Logout();
         eventClient.emit('loginchange');
     }
@@ -45,11 +48,11 @@ class Header extends BaseComponent {
             <header className="navbar">
                 <div className="col-7">
                     {
-                         user === null ? null :
+                        user === null ? null :
                             self.state.breadcrumbs.map((obj, i) =>
                                 <span key={i}>
                                     {
-                                        obj.href!==undefined ?
+                                        obj.href !== undefined ?
                                             <Link to={'/' + obj.href} key={i}>
                                                 {obj.title}
                                             </Link>
@@ -76,7 +79,7 @@ class Header extends BaseComponent {
                 </div>
                 <div className="col-1">
                     {
-                        user===null ? null : <i className="fas fa-power-off" onClick={self.Logout}></i>
+                        user === null ? null : <i className="fas fa-power-off" onClick={self.Logout}></i>
                     }
 
                 </div>

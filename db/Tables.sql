@@ -49,6 +49,8 @@ create table Admin.AdmUser
   Active boolean not null  
 );
 
+insert into Admin.AdmUser () values ('81dc9bdb52d04dc20036dbd8313ed055')
+
 CREATE INDEX idx_AdmUser_full_text 
     ON Admin.AdmUser 
     USING gin ( to_tsvector('english',Name || ' ' || Mail) );

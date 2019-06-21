@@ -13,7 +13,7 @@ import uuidv4 from 'uuid/v4';
 import MLEdit from '../visuals/mledit';
 import { toast } from 'react-toastify';
 import nomenclatures from '../data/nomenclatures';
-
+import Comm from '../modules/comm';
 
 
 export default class Nomenclatures extends BaseComponent {
@@ -32,13 +32,13 @@ export default class Nomenclatures extends BaseComponent {
             }]
         );
         this.ReloadData = this.ReloadData.bind(this);
-        this.ChangeNomenclature = this.ChangeNomenclature.bind(this);
         this.SelectItem = this.SelectItem.bind(this);
         this.ChangeTitle = this.ChangeTitle.bind(this);
         this.Delete = this.Delete.bind(this);
         this.NewItem = this.NewItem.bind(this);
         this.SaveToDB = this.SaveToDB.bind(this);
-                
+        this.ChangeNomen = this.ChangeNomen.bind(this);
+        
 
         this.state.nomenclature = "issuers";
         this.state.selectedId = null;
@@ -48,20 +48,25 @@ export default class Nomenclatures extends BaseComponent {
 
 
 
+
+
     ReloadData(nomen) {
         var self = this;
 
-        Axios.get('https://www.dir.bg').then(
+        Comm.Instance().get('admin/GetJSON').then(
             result => {
 
                 var data = [];
+                var wholeJSON = result.data;
+                wholeJSON.forEach(x => x.jsonData = JSON.parse(x.jsonData));
                 switch (nomen) {
-                    case "issuers": data = nomenclatures.issuers; break;
-                    case "doctypes": data = nomenclatures.doctypes; break;
+                    case "issuers": data = wholeJSON.find(x => x.jsonType === "issuers").jsonData; break;
+                    case "doctypes": data = wholeJSON.find(x => x.jsonType === "doctypes").jsonData; break;
                     default: break;
 
                 }
                 self.setState({
+                    wholeJSON: wholeJSON,
                     data: data,
                     selectedId: null
                 });
@@ -74,17 +79,29 @@ export default class Nomenclatures extends BaseComponent {
 
     }
 
+
+    ChangeNomen(nomen) {
+        var data = [];
+        switch (nomen) {
+            case "issuers": data = this.state.wholeJSON.find(x => x.jsonType === "issuers").jsonData; break;
+            case "doctypes": data = this.state.wholeJSON.find(x => x.jsonType === "doctypes").jsonData; break;
+            default: break;
+
+        }
+        this.setState({
+            data: data,
+            selectedId: null,
+            nomenclature: nomen
+        });
+    }
+
     componentDidMount() {
         this.ReloadData(this.state.nomenclature);
 
     }
 
 
-    ChangeNomenclature(nomen) {
-        this.setState({ nomenclature: nomen });
-        this.ReloadData(nomen);
-    }
-
+    
     SelectItem(id) {
         this.setState({
             selectedId: id
@@ -128,12 +145,16 @@ export default class Nomenclatures extends BaseComponent {
     SaveToDB() {
         var self = this;
 
-        Axios.get('https://www.dir.bg').then(
+        var postData = JSON.parse(JSON.stringify(this.state.wholeJSON));
+        postData.forEach(x => x.jsonData = JSON.stringify(x.jsonData));
+
+
+        Comm.Instance().post('admin/UpdateJSON', postData).then(
             result => {
 
-                
-                    toast.info(self.T("datasaved"));
-    
+
+                toast.info(self.T("datasaved"));
+
 
 
             }).catch(
@@ -158,7 +179,7 @@ export default class Nomenclatures extends BaseComponent {
                             <button className="btn btn-primary" onClick={self.SaveToDB}>{self.T("save")}</button>
                         </div>
                         <div className="col-2">
-                            <select className="form-control" value={self.state.nomenclature} onChange={(e) => self.ChangeNomenclature(e.target.value)}>
+                            <select className="form-control" value={self.state.nomenclature} onChange={(e) => self.ChangeNomen(e.target.value)}>
                                 <option value="issuers">{self.T("issuers")}</option>
                                 <option value="doctypes">{self.T("doctypes")}</option>
                             </select>

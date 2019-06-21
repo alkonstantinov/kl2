@@ -69,6 +69,10 @@
         "repeatpassword": "Please, repeat password",
         "passwordmustnotbeempty": "Password, must not be empty",
         "passworddonotmatch": "Passwords do not match",
-        "passwordchanged": "Password changed"
+        "passwordchanged": "Password changed",
+        "unauthorized": "Unauthorized access",
+        "invalidusernameorpassword": "Invalid username or password",
+        "passwordmandatory": "Please, enter password",
+        "notfound": "No records found"
     }
 }

@@ -221,9 +221,9 @@ namespace kl2.server.DB
                 {
                     var rdr =
                         model.LimitResult.HasValue ?
-                        conn.ExecuteReader("select * from Admin.SearchDocument(@ss::citext, @limitResult)", new { ss = model.SS, limitResult = model.LimitResult.Value })
+                        conn.ExecuteReader("select * from Admin.SearchDocument(@ss::citext, @limitResult)", new { ss = model.SS ?? "", limitResult = model.LimitResult.Value })
                         :
-                        conn.ExecuteReader("select * from Admin.SearchDocument(@ss::citext)", new { ss = model.SS });
+                        conn.ExecuteReader("select * from Admin.SearchDocument(@ss::citext)", new { ss = model.SS ?? "" });
                     while (rdr.Read())
                     {
                         result.Add(ConvertToObject<Document>(rdr));
@@ -308,7 +308,7 @@ namespace kl2.server.DB
             {
                 using (conn)
                 {
-                    var rdr = conn.ExecuteReader("select * from Admin.SearchUsers(@top, @rowCount, @ss)", new { top = model.Top, rowCount = model.RowCount, ss = model.SS });
+                    var rdr = conn.ExecuteReader("select * from Admin.SearchUsers(@top, @rowCount, @ss::citext)", new { top = model.Top, rowCount = model.RowCount, ss = model.SS ?? "" });
                     while (rdr.Read())
                     {
                         result.Add(ConvertToObject<SearchUserResponse>(rdr));
@@ -331,8 +331,8 @@ namespace kl2.server.DB
             {
                 using (conn)
                 {
-                    conn.ExecuteScalar("select * from Admin.SaveUser(@userId, @name, @typeId::citext, @password::citext, @active)", 
-                        new { userId = model.AdmUserID, name = model.Name, typeId = model.UserTypeID, password = model.Password, active = model.Active });
+                    conn.ExecuteScalar("select * from Admin.SaveUser(@userId, @name, @typeId::citext, @password::citext, @active)",
+                        new { userId = model.AdmUserID, name = model.Name, typeId = model.UserTypeID, password = model.Password, active = model.Active, mail = model.Mail });
 
                 }
 
@@ -350,8 +350,8 @@ namespace kl2.server.DB
             {
                 using (conn)
                 {
-                    conn.ExecuteScalar("select * from Admin.NewUser(@name, @typeId::citext, @password::citext, @active)",
-                        new { name = model.Name, typeId = model.UserTypeID, password = model.Password, active = model.Active });
+                    conn.ExecuteScalar("select * from Admin.NewUser(@name, @typeId::citext, @mail::citext, @password::citext, @active)",
+                        new { name = model.Name, typeId = model.UserTypeID, password = model.Password, active = model.Active, mail = model.Mail });
 
                 }
 
@@ -382,7 +382,7 @@ namespace kl2.server.DB
                         {
                             bytesRead += rdr.GetBytes(0, curPos, result, curPos, bufferSize);
                             curPos += bufferSize;
-                        }                        
+                        }
                     }
                     rdr.Close();
                 }
@@ -403,11 +403,32 @@ namespace kl2.server.DB
             {
                 using (conn)
                 {
-                    var rdr = conn.ExecuteReader("select * from Admin.SaveImage(@imageHash::citext, @image)", new { imageHash = imageHash, image= image });
+                    var rdr = conn.ExecuteReader("select * from Admin.SaveImage(@imageHash::citext, @image)", new { imageHash = imageHash, image = image });
                     if (rdr.Read())
                     {
                         result = rdr.GetGuid(0);
                     }
+                    rdr.Close();
+                }
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return result;
+        }
+
+        public bool MailExists(string mail)
+        {
+            var conn = this.OpenConnection();
+            bool result = false;
+            try
+            {
+                using (conn)
+                {
+                    var rdr = conn.ExecuteReader("select * from Admin.MailExists(@mail::citext)", new { mail = mail });
+                    result = rdr.Read();
                     rdr.Close();
                 }
 

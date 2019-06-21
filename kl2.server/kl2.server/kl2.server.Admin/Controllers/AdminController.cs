@@ -14,9 +14,9 @@ namespace kl2.server.Admin.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : BaseController
+    public class AdminController : BaseController
     {
-        public UserController(IConfiguration configuration) : base(configuration)
+        public AdminController(IConfiguration configuration) : base(configuration)
         {
 
         }
@@ -44,11 +44,12 @@ namespace kl2.server.Admin.Controllers
         }
 
         [HttpPost("UpdateJSON")]
-        public async Task<IActionResult> UpdateJSON(JSON model)
+        public async Task<IActionResult> UpdateJSON(JSON[] model)
         {
             if (!this.IsAuthenticationRight("operator"))
                 return Unauthorized();
-            this.dbaf.UpdateJSON(model);
+            foreach (var row in model)
+                this.dbaf.UpdateJSON(row);
             return Ok();
         }
 
@@ -57,7 +58,7 @@ namespace kl2.server.Admin.Controllers
         {
             if (!this.IsAuthenticationRight("operator"))
                 return Unauthorized();
-            return Ok(this.GetJSON(jsonType));
+            return Ok(this.dbaf.GetJSON(jsonType));
         }
 
         [HttpGet("GetDocument")]
@@ -65,7 +66,7 @@ namespace kl2.server.Admin.Controllers
         {
             if (!this.IsAuthenticationRight("operator"))
                 return Unauthorized();
-            return Ok(this.GetDocument(documentId));
+            return Ok(this.dbaf.GetDocument(documentId));
         }
 
         [HttpPost("UpdateDocument")]
@@ -94,7 +95,7 @@ namespace kl2.server.Admin.Controllers
             return Ok(this.dbaf.SearchDocument(model));
         }
 
-        [HttpPost("UnpublishedDocuments")]
+        [HttpGet("UnpublishedDocuments")]
         public async Task<IActionResult> UnpublishedDocuments()
         {
             if (!this.IsAuthenticationRight("operator"))
@@ -124,7 +125,7 @@ namespace kl2.server.Admin.Controllers
         [HttpPost("SearchUsers")]
         public async Task<IActionResult> SearchUsers(SearchUserRequest model)
         {
-            if (!this.IsAuthenticationRight("operator"))
+            if (!this.IsAuthenticationRight("administrator"))
                 return Unauthorized();
             return Ok(this.dbaf.SearchUsers(model));
         }
@@ -132,7 +133,7 @@ namespace kl2.server.Admin.Controllers
         [HttpPost("SaveUser")]
         public async Task<IActionResult> SaveUser(User model)
         {
-            if (!this.IsAuthenticationRight("operator"))
+            if (!this.IsAuthenticationRight("administrator"))
                 return Unauthorized();
             this.dbaf.SaveUser(model);
             return Ok();
@@ -141,7 +142,7 @@ namespace kl2.server.Admin.Controllers
         [HttpPost("NewUser")]
         public async Task<IActionResult> NewUser(User model)
         {
-            if (!this.IsAuthenticationRight("operator"))
+            if (!this.IsAuthenticationRight("administrator"))
                 return Unauthorized();
             this.dbaf.NewUser(model);
             return Ok();
@@ -174,8 +175,17 @@ namespace kl2.server.Admin.Controllers
             }
             return Ok(this.dbaf.SaveImage(hash, imageBytes));
 
+        }
+
+        [HttpGet("MailExists")]
+        public async Task<IActionResult> MailExists(string mail)
+        {
+            if (!this.IsAuthenticationRight("administrator"))
+                return Unauthorized();
+
+            return Ok(this.dbaf.MailExists(mail));
+        }
+
+
     }
-
-
-}
 }

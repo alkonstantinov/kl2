@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kl2.server.DB", "kl2.server.DB\kl2.server.DB.csproj", "{6463A972-2F51-4DFB-B37B-EE782EF4260B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kl2.server.Admin", "kl2.server.Admin\kl2.server.Admin.csproj", "{01029222-5D6C-447D-9D7A-024B1C4DD82A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kl2.server.Admin", "kl2.server.Admin\kl2.server.Admin.csproj", "{01029222-5D6C-447D-9D7A-024B1C4DD82A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kl2.server.common", "kl2.server.common\kl2.server.common.csproj", "{AC868970-6EAF-4DD1-9650-C1BB53DED2EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{01029222-5D6C-447D-9D7A-024B1C4DD82A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01029222-5D6C-447D-9D7A-024B1C4DD82A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01029222-5D6C-447D-9D7A-024B1C4DD82A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC868970-6EAF-4DD1-9650-C1BB53DED2EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC868970-6EAF-4DD1-9650-C1BB53DED2EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC868970-6EAF-4DD1-9650-C1BB53DED2EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC868970-6EAF-4DD1-9650-C1BB53DED2EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

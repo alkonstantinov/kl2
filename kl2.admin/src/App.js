@@ -14,7 +14,7 @@ import DocumentSearch from './components/documentsearch';
 import Users from './components/users';
 import NewDoc from './components/newdoc';
 import Nomenclatures from './components/nomenclatures';
-
+import Comm from './modules/comm'; 
 
 class App extends BaseComponent {
 
@@ -24,6 +24,11 @@ class App extends BaseComponent {
     this.state = {
       dt: new Date().getMilliseconds()
     };
+    var user =this.SM.GetSession();
+    if(user){
+      Comm.Instance().defaults.headers.common['Authorization'] = user.token;
+                
+    }
   }
 
 
