@@ -182,7 +182,7 @@ namespace kl2.server.DB
             {
                 using (conn)
                 {
-                    conn.ExecuteScalar("select * from Admin.UpdateDOCUMENT(documentData)", new { documentData = model.DocumentData });
+                    conn.ExecuteScalar("select * from Admin.UpdateDOCUMENT(@documentData)", new { documentData = model.DocumentData });
 
                 }
 
@@ -193,6 +193,8 @@ namespace kl2.server.DB
             }
         }
 
+
+
         public void InsertDOCUMENT(Document model)
         {
             var conn = this.OpenConnection();
@@ -200,10 +202,14 @@ namespace kl2.server.DB
             {
                 using (conn)
                 {
-                    conn.ExecuteScalar("select * from Admin.InsertDOCUMENT(documentData)", new { documentData = model.DocumentData });
+                    conn.ExecuteScalar("select * from Admin.InsertDOCUMENT(@documentData::jsonb)", new { documentData = model.DocumentData });
 
                 }
 
+            }
+            catch (Exception ex)
+            {
+                int q = 3;
             }
             finally
             {
@@ -370,19 +376,12 @@ namespace kl2.server.DB
             {
                 using (conn)
                 {
-                    var rdr = conn.ExecuteReader("select * from Admin.GetImage(@imageHash::citext)", new { imageHash = imageHash });
+                    var rdr = conn.ExecuteReader("select * from Admin.GetImage(@imageHash::uuid)", new { imageHash = imageHash });
                     if (rdr.Read())
                     {
                         long size = rdr.GetBytes(0, 0, null, 0, 0); //get the length of data 
                         result = new byte[size];
-                        int bufferSize = 1024;
-                        long bytesRead = 0;
-                        int curPos = 0;
-                        while (bytesRead < size)
-                        {
-                            bytesRead += rdr.GetBytes(0, curPos, result, curPos, bufferSize);
-                            curPos += bufferSize;
-                        }
+                        rdr.GetBytes(0, 0, result, 0, result.Length);                        
                     }
                     rdr.Close();
                 }

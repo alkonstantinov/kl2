@@ -149,12 +149,10 @@ namespace kl2.server.Admin.Controllers
         }
 
         [HttpGet("GetImage")]
-        public async Task<byte[]> GetImage(Guid imageHash)
+        public async Task<FileContentResult> GetImage(Guid imageHash)
         {
-            if (!this.IsAuthenticationRight("operator"))
-                return null;
-            return this.dbaf.GetImage(imageHash);
-
+            var response = File(this.dbaf.GetImage(imageHash), "application/octet-stream"); // FileStreamResult
+            return response;
         }
 
 

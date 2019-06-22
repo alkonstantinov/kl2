@@ -1,17 +1,10 @@
 import React from 'react';
-import eventClient from '../modules/eventclient';
 import BaseComponent from '../components/basecomponent';
-import { SelectButton } from 'primereact/selectbutton';
 import 'primereact/resources/themes/nova-light/theme.css';
 import 'primereact/resources/primereact.min.css';
 import { Tree } from 'primereact/tree';
-import categories from '../data/categories.json';
-import Axios from 'axios';
 import Loader from 'react-loader-spinner';
-import Languages from '../data/languages';
-import uuidv4 from 'uuid/v4';
-import MLEdit from './mledit';
-import { toast } from 'react-toastify';
+import Comm from '../modules/comm';
 
 
 
@@ -66,12 +59,12 @@ export default class CategoriesSelect extends BaseComponent {
 
 
 
-        Axios.get('https://www.dir.bg').then(
+        Comm.Instance().get('admin/GetJSON?jsonType=categories').then(
             result => {
 
-                var treeJSON = categories;
+                var treeJSON = JSON.parse(result.data[0].jsonData);
                 self.expandedNodes = { "-1": true };
-                var treeJSON = [{
+                treeJSON = [{
                     key: "-1",
                     label: this.T("categories"),
                     data: {},
@@ -81,11 +74,11 @@ export default class CategoriesSelect extends BaseComponent {
 
                 this.CreateExpandedNodes(treeJSON[0], self.expandedNodes);
                 this.setState({ Checks: checks });
-
                 this.DisplayTree("-1", treeJSON);
 
 
-            }).catch(
+            })
+            .catch(
                 function (response) {
                     console.log(response);
                 }

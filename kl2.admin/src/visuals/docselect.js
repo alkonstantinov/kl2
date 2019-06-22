@@ -4,7 +4,7 @@ import searchresult from '../data/searchresult';
 import BaseComponent from '../components/basecomponent';
 import Axios from 'axios';
 import { Tree } from 'primereact/tree';
-import exampleDoc from '../data/exampledoc';
+import Comm from '../modules/comm';
 
 
 class DocSelect extends BaseComponent {
@@ -25,9 +25,14 @@ class DocSelect extends BaseComponent {
 
     Search() {
         var self = this;
-        Axios.get('https://www.dir.bg').then(
+        var postData = { SS: self.state.Rec.SS, LimitResult: 100 };
+
+        Comm.Instance().post('admin/SearchDocument', postData).then(
+        
             result => {
-                self.setState({ SearchResult: searchresult });
+                var resultList = result.data;
+                resultList.forEach(x => x.documentData = JSON.parse(x.documentData));
+                self.setState({ SearchResult: resultList });
 
             }).catch(
                 function (response) {
@@ -50,23 +55,20 @@ class DocSelect extends BaseComponent {
         return element;
     }
 
-    SelectDocument(id) {
+    SelectDocument(doc) {
         var self = this;
-        this.setState({ SelectedDocumentId: id });
+        this.setState({ SelectedDocumentId: doc.id });
         if (this.props.onlyDocument)
-            this.props.selectSuccess(id, null);
+            this.props.selectSuccess(doc.id, null);
         else {
 
-            Axios.get('https://www.dir.bg').then(
-                result => {
-
-                    var doc = exampleDoc;
+            
                     var expandedNodes = { "-1": true };
 
                     Object.keys(doc.paragraphs).forEach(item => expandedNodes[item] = true);
                     self.setState({
                         DisplayMode: "parts",
-                        Document: exampleDoc,
+                        Document: doc,
                         TreeData: [{
                             key: "-1",
                             label: self.T("document"),
@@ -76,12 +78,7 @@ class DocSelect extends BaseComponent {
                         ExpandedNodes: expandedNodes
                     });
 
-                }).catch(
-                    function (response) {
-                        console.log(response);
-                    }
-                );
-
+            
 
 
         }
@@ -135,7 +132,7 @@ class DocSelect extends BaseComponent {
                                                     self.state.SearchResult.map(obj =>
                                                         <tr>
                                                             <td>
-                                                                <a onClick={() => self.SelectDocument(obj.id)} href="#">{obj.title[self.SM.GetLanguage()]}</a>
+                                                                <a onClick={() => self.SelectDocument(obj.documentData)} href="#">{obj.documentData.title[self.SM.GetLanguage()]}</a>
                                                             </td>
                                                         </tr>
                                                     )

@@ -7,8 +7,8 @@ import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
 import { Dialog } from 'primereact/dialog';
 import DocSelect from '../visuals/docselect';
-import Axios from 'axios';
-
+import comm from '../modules/comm';
+import serverdata from '../data/serverdata.json';
 
 
 
@@ -110,34 +110,39 @@ class PartEdit extends BaseComponent {
         input.setAttribute('type', 'file');
         input.setAttribute('accept', 'image/*');
         input.click();
-        input.onchange = async function() {
-          const file = input.files[0];
-          console.log('User trying to uplaod this:', file);
-    
-          let res = await Axios.get("https://www.dir.bg");
-          window.alert(res.data);
-          const id = 123;
-          
-          //await uploadFile(file); // I'm using react, so whatever upload function
-          const range = this.quill.getSelection();
-          const link = "https://avatars0.githubusercontent.com/u/28754907?s=460&v=4";
-    
-          // this part the image is inserted
-          // by 'image' option below, you just have to put src(link) of img here. 
-          this.quill.insertEmbed(range.index, 'image', link); 
-        }.bind(this); // react thing
-      }
+        input.onchange = async function () {
+            const file = input.files[0];
+            console.log('User trying to uplaod this:', file);
 
-    
+            var id = null;
+            const data = new FormData();
+            data.append('image', file, file.name);
+
+            await comm.Instance().post("admin/SaveImage", data)
+                .then(result => id = result.data);
+
+
+
+            //await uploadFile(file); // I'm using react, so whatever upload function
+            const range = this.quill.getSelection();
+            const link = serverdata.url + "admin/GetImage?imageHash=" + id;
+
+            // this part the image is inserted
+            // by 'image' option below, you just have to put src(link) of img here. 
+            this.quill.insertEmbed(range.index, 'image', link);
+        }.bind(this); // react thing
+    }
+
+
 
 
     render() {
         var self = this;
 
         var modules = {
-            toolbar: 
+            toolbar:
             {
-                container:[
+                container: [
                     [{ 'header': '1' }, { 'header': '2' }],
                     [{ size: [] }],
                     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
@@ -147,19 +152,19 @@ class PartEdit extends BaseComponent {
                     ['clean']
                 ],
                 handlers: { "image": self.imageHandler }
- 
+
 
             }
-            
+
         };
-    
+
         var formats = [
             'header', 'color', 'size',
             'bold', 'italic', 'underline', 'strike', 'blockquote',
             'list', 'bullet', 'indent',
             'link', 'image'
         ];
-    
+
         return (
 
 

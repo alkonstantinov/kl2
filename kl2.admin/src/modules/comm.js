@@ -10,7 +10,7 @@ class Comm {
             this.instance = Axios.create({
                 baseURL: serverdata.url,
                 headers: { 'Access-Control-Allow-Origin': '*', },
-                timeout: 5000
+                timeout: 15000
             });
         return this.instance;
     }

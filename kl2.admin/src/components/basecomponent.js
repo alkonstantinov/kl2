@@ -60,18 +60,20 @@ class BaseComponent extends Component {
 
     ConvertArrayToObject(array) {
         var result = new Object(null);
-        array.forEach(item => result[item] = true);
-
+        if (array) {
+            array.forEach(item => result[item] = true);
+        }
         return result;
     }
 
     ConvertObjectToArray(obj) {
         var result = [];
-        Object.keys(obj).forEach(item => {
-            if (obj[item])
-                result.push(item)
-        });
-
+        if (obj) {
+            Object.keys(obj).forEach(item => {
+                if (obj[item])
+                    result.push(item)
+            });
+        }
         return result;
     }
 

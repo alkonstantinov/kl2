@@ -84,17 +84,22 @@ export default class Users extends BaseComponent {
 
 
 
-        Axios.get('https://www.dir.bg').then(
+        var postData = {
+            SS: this.state.Rec.SS,
+            Top: this.state.Count + 1,
+            RowCount: this.RowCount
+        };
+
+        Comm.Instance().post('admin/SearchUsers', postData).then(
             result => {
 
-                var resultList = userlist;
-                rows = rows.concat(userlist.rows);
                 self.setState({
                     Searching: false,
-                    Rows: rows,
-                    Count: userlist.count,
-                    SearchSS: userlist.ss
+                    Rows: result.data,
+                    Count: result.data && result.data.length > 0 ? result.data[0].Total : 0,
+                    SearchSS: postData.SS
                 });
+                
 
 
             }).catch(

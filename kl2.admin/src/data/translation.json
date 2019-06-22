@@ -73,6 +73,7 @@
         "unauthorized": "Unauthorized access",
         "invalidusernameorpassword": "Invalid username or password",
         "passwordmandatory": "Please, enter password",
-        "notfound": "No records found"
+        "notfound": "No records found",
+        "newdocument": "New Document"
     }
 }

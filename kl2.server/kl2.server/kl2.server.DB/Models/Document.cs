@@ -8,7 +8,7 @@ namespace kl2.server.DB.Models
     {
         public Guid DocumentID { get; set; }
         public DateTime EditDate { get; set; }
-        public DateTime PublishDate { get; set; }
+        public DateTime? PublishDate { get; set; }
         public String DocumentData { get; set; }        
     }
 }

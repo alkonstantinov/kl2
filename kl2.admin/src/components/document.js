@@ -4,8 +4,6 @@ import BaseComponent from './basecomponent';
 import eventClient from '../modules/eventclient';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Axios from 'axios';
-import exampleDoc from '../data/exampledoc';
-import nomenclatures from '../data/nomenclatures';
 import Loader from 'react-loader-spinner';
 import moment from 'moment';
 import { Dialog } from 'primereact/dialog';
@@ -20,9 +18,9 @@ import { PanelMenu } from 'primereact/panelmenu';
 import Languages from '../data/languages';
 import PartEdit from '../visuals/partedit';
 import DocSelect from '../visuals/docselect';
-import docpartresponse from '../data/docpartresponse';
 import CategoriesSelect from '../visuals/categoriesselect';
 import { toast } from 'react-toastify';
+import Comm from '../modules/comm';
 
 class Document extends BaseComponent {
     DocId = null;
@@ -40,7 +38,7 @@ class Document extends BaseComponent {
                 href: "documentsearch"
             },
             {
-                title: this.T("users")
+                title: this.T("document")
             }]
         )
         this.ChangeTitle = this.ChangeTitle.bind(this);
@@ -60,7 +58,7 @@ class Document extends BaseComponent {
         this.SetCategories = this.SetCategories.bind(this);
         this.Save = this.Save.bind(this);
         this.CreateNewVersion = this.CreateNewVersion.bind(this);
-        
+
         this.dsDoc = React.createRef();
         this.csCategories = React.createRef();
 
@@ -89,17 +87,17 @@ class Document extends BaseComponent {
 
         if (this.DocId) {
 
-            Axios.get('https://www.dir.bg').then(
+            Comm.Instance().get('admin/GetDocument?documentId=' + this.DocId).then(
                 result => {
 
                     self.Child2Parent = {};
-                    var doc = exampleDoc;
+                    var doc = JSON.parse(result.data.documentData);
                     var expandedNodes = { "-1": true };
 
                     Object.keys(doc.paragraphs).forEach(item => expandedNodes[item] = true);
 
                     this.setState({
-                        Document: exampleDoc,
+                        Document: doc,
                         DisplayMode: "requisites", //requisites, content,
                         TreeData: [{
                             key: "-1",
@@ -127,10 +125,14 @@ class Document extends BaseComponent {
 
     InitialiseNomenclatures() {
 
-        Axios.get('https://www.dir.bg').then(
+        Comm.Instance().get('admin/GetJSON').then(
             result => {
+                var obj = {};
+                result.data.forEach(x => obj[x.jsonType] = JSON.parse(x.jsonData));
+
+
                 this.setState({
-                    Nomenclatures: nomenclatures,
+                    Nomenclatures: obj,
                     NomenclaturesLoaded: true
                 });
 
@@ -413,12 +415,19 @@ class Document extends BaseComponent {
             return;
         }
 
-        Axios.get('https://www.dir.bg').then(
+        Comm.Instance().get('admin/GetDocument?documentId=' + citeInfo.DocId).then(
             result => {
 
+                var doc = JSON.parse(result.data.documentData);
+
+                var docPartInfo = {
+                    "title": doc.title,
+                    "part": mode === 2 ? doc.paragraphs[citeInfo.partid].title : null
+                }
+
                 switch (mode) {
-                    case 1: this.setState({ WDAnnuledInfo: docpartresponse }); break;
-                    case 2: this.setState({ CPAnnuledInfo: docpartresponse }); break;
+                    case 1: this.setState({ WDAnnuledInfo: docPartInfo }); break;
+                    case 2: this.setState({ CPAnnuledInfo: docPartInfo }); break;
                     default: break;
                 }
 
@@ -486,23 +495,26 @@ class Document extends BaseComponent {
 
     Save() {
         var self = this;
+        var doc = this.self.Document;
 
-
-
-        Axios.get('https://www.dir.bg').then(
-            result => {
-
-                //toast.error(self.T("mailused"));
+        var postData = {
+            DocumentID: doc.id,
+            EditDate: new Date(),
+            DocumentData: JSON.stringify(doc)
+        };
+        var self = this;
+        Comm.Instance().post("admin/InsertDOCUMENT", postData)
+            .then(result => {
                 toast.info(self.T("savedok"));
 
-            }).catch(
-                function (response) {
-                    console.log(response);
-                    self.setState({
-                        Searching: false
-                    });
-                }
-            );
+            })
+            .catch(
+                response => console.log(response)
+
+            )
+
+
+
     }
 
     CreateNewVersion(old) {
@@ -518,7 +530,16 @@ class Document extends BaseComponent {
         var newId = uuidv4();
         document.id = newId;
         var self = this;
-        Axios.get("https://www.dir.bg")
+
+
+        var postData = {
+            DocumentID: newId,
+            EditDate: new Date(),
+            PublishDate: null,
+            DocumentData: JSON.stringify(document)
+        };
+
+        Comm.Instance().post("admin/InsertDOCUMENT", postData)
             .then(result => {
                 self.setState({ ShowNewVer: newId })
 
@@ -527,6 +548,8 @@ class Document extends BaseComponent {
                 response => console.log(response)
 
             )
+
+
 
     }
 
@@ -548,10 +571,10 @@ class Document extends BaseComponent {
                                         <button className="btn btn-primary" onClick={self.Save}>{self.T("save")}</button>
                                     </div>
                                     <div className="col-4">
-                                        <button className="btn btn-success" onClick={()=>self.CreateNewVersion(false)}>{self.T("newer")}</button>
+                                        <button className="btn btn-success" onClick={() => self.CreateNewVersion(false)}>{self.T("newer")}</button>
                                     </div>
                                     <div className="col-4">
-                                        <button className="btn btn-danger" onClick={()=>self.CreateNewVersion(true)}>{self.T("older")}</button>
+                                        <button className="btn btn-danger" onClick={() => self.CreateNewVersion(true)}>{self.T("older")}</button>
                                     </div>
                                 </div>
                                 <div className="row border">

@@ -213,7 +213,7 @@ export default class DocumentSearch extends BaseComponent {
             "id": newId,
             "leadId": uuidv4(),
             "title": {
-                "en": ""
+                "en": this.TranslateIntoLanguage("newdocument", "en")
             },
             "paragraphs": {
 
@@ -222,8 +222,15 @@ export default class DocumentSearch extends BaseComponent {
 
             ]
         };
+
+        var postData = {
+            DocumentID: newId,
+            EditDate: new Date(),
+            PublishDate: null,
+            DocumentData: JSON.stringify(document)
+        };
         var self = this;
-        Axios.get("https://www.dir.bg")
+        Comm.Instance().post("admin/InsertDOCUMENT", postData)
             .then(result => {
                 self.setState({ ShowNewVer: newId })
 
